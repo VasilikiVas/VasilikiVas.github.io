@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: PhD Candidate, <a href="https://www.ntua.gr/en/" target="_blank">National Technical University of Athens</a> · <a href="[https://heron.gr](https://heron-robotics-coe.eu/)" target="_blank">HERON</a> · <a href="[https://heron.gr](https://heron-robotics-coe.eu/)" target="_blank">HERON</a>
+subtitle: PhD Candidate, <a href="https://www.ntua.gr/en/" target="_blank">National Technical University of Athens</a> · <a href="https://archimedesai.gr/en/" target="_blank">Archimedes</a> · <a href="https://heron-robotics-coe.eu/" target="_blank">HERON</a>
 
 profile:
   align: right
