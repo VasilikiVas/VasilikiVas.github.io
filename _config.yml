@@ -167,14 +167,14 @@ highlighter: rouge
 kramdown:
   input: GFM
   syntax_highlighter_opts:
-    css_class: 'highlight'
+    css_class: "highlight"
     span:
       line_numbers: false
     block:
       line_numbers: false
       start_line: 1
 
-include: ['_pages']
+include: ["_pages"]
 exclude:
   - bin
   - Gemfile
@@ -186,7 +186,7 @@ keep_files:
   - .git
 
 plugins:
-  - jekyll-archives
+  - jekyll-archives-v2
   - jekyll-diagrams
   - jekyll-email-protect
   - jekyll-feed
@@ -211,7 +211,7 @@ defaults:
 # -----------------------------------------------------------------------------
 
 jekyll-minifier:
-  exclude: ['robots.txt']
+  exclude: ["robots.txt"]
   uglifier_args:
     harmony: true
 
@@ -220,17 +220,14 @@ jekyll-minifier:
 # -----------------------------------------------------------------------------
 
 jekyll-archives:
-  enabled: [year, tags, categories]
-  layouts:
-    year: archive-year
-    tag: archive-tag
-    category: archive-category
-  permalinks:
-    year: '/blog/:year/'
-    tag: '/blog/tag/:name/'
-    category: '/blog/category/:name/'
+  posts:
+    enabled: [year, tags, categories]
+    permalinks:
+      year: "/blog/:year/"
+      tags: "/blog/:type/:name/"
+      categories: "/blog/:type/:name/"
 
-display_tags: ['formatting', 'images', 'links', 'math', 'code']
+display_tags: ["formatting", "images", "links", "math", "code"]
 
 # -----------------------------------------------------------------------------
 # Jekyll Scholar
@@ -300,18 +297,18 @@ imagemagick:
 # Optional Features
 # -----------------------------------------------------------------------------
 
-enable_google_analytics:    false
+enable_google_analytics: false
 enable_panelbear_analytics: false
 enable_google_verification: false
-enable_bing_verification:   false
-enable_masonry:             true
-enable_math:                true
-enable_tooltips:            false
-enable_darkmode:            true
-enable_navbar_social:       false
-enable_project_categories:  true
-enable_medium_zoom:         true
-enable_progressbar:         true
+enable_bing_verification: false
+enable_masonry: true
+enable_math: true
+enable_tooltips: false
+enable_darkmode: true
+enable_navbar_social: false
+enable_project_categories: true
+enable_medium_zoom: true
+enable_progressbar: true
 
 # -----------------------------------------------------------------------------
 # Library versions
