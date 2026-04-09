@@ -6,7 +6,7 @@ subtitle: PhD Candidate, <a href="https://www.ntua.gr/en/" target="_blank">Natio
 
 profile:
   align: right
-  image: prof_pic.png.png
+  image: square-image.jpg
   image_circular: true
   address:
 
