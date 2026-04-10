@@ -35,16 +35,9 @@ cv:
         summary: >-
           Research in computer vision and machine learning, with a focus on
           neural radiance fields, projective geometry, 3D geometry in computer
-          vision, and language models.
-
-      - company: National Technical University of Athens
-        position: PhD Candidate
-        location: Athens, Greece
-        url: https://www.ntua.gr/en/
-        start_date: 2023-09-01
-        summary: >-
-          Doctoral research advised by Prof. Kostas Daniilidis and Prof. Petros
-          Maragos.
+          vision, and language models. Doctoral research advised by Prof.
+          Kostas Daniilidis and Prof. Petros Maragos in collaboration with the
+          National Technical University of Athens.
 
       - company: GRASP Lab, University of Pennsylvania
         position: Visiting Associate
@@ -215,34 +208,6 @@ cv:
         summary: >-
           800 euro award for achieving the highest Nationwide University
           Entrance Examination score at my senior high school.
-
-    Volunteer:
-      - company: 2nd High School of Preveza
-        position: Assistant
-        location: Preveza, Greece
-        start_date: 2013
-        end_date: 2015
-        summary: >-
-          Solved mathematics and programming problems and questions for
-          classmates after school hours once per week.
-
-      - company: The Smile of the Child
-        position: Creativity Lab Member
-        location: Athens, Greece
-        start_date: 2020
-        end_date: 2020
-
-      - company: Athens Marathon the Authentic
-        position: Marathon Course Support Volunteer
-        location: Athens, Greece
-        start_date: 2019
-        end_date: 2019
-
-      - company: Athens Science Festival
-        position: School Host
-        location: Athens, Greece
-        start_date: 2019
-        end_date: 2019
 
     Languages:
       - name: English

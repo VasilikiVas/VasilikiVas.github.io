@@ -31,20 +31,6 @@
                     <span class="badge font-weight-bold danger-color-dark text-uppercase align-middle" style="min-width: 75px">{{ date }}</span>
                   </td>
                 </tr>
-                {% capture location %}
-                  {% if entry.location %}{{ entry.location }}{% endif %}
-                {% endcapture %}
-                {% assign location = location | strip %}
-                {% if location != '' %}
-                  <tr>
-                    <td>
-                      <p class="location">
-                        <i class="fa-solid fa-location-dot iconlocation"></i>
-                        {{ location }}
-                      </p>
-                    </td>
-                  </tr>
-                {% endif %}
               </tbody>
             </table>
           </div>
@@ -69,13 +55,6 @@
           {% endcapture %}
           {% if company_name != '' %}
             <h6 class="ml-1 ml-md-4" style="font-size: 0.95rem">{{ company_name }}</h6>
-          {% endif %}
-
-          {% if start_date == '' and entry.location %}
-            <h6 class="ml-1 ml-md-4" style="font-size: 0.95rem">
-              <i class="fa-solid fa-location-dot iconlocation"></i>
-              {{ entry.location }}
-            </h6>
           {% endif %}
 
           {% if entry.summary %}
