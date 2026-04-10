@@ -35,8 +35,9 @@ cv:
           Research in computer vision and machine learning, with a focus on
           neural radiance fields, projective geometry, 3D geometry in computer
           vision, and language models. Doctoral research advised by Prof.
-          Kostas Daniilidis and Prof. Petros Maragos in collaboration with the
-          National Technical University of Athens.
+          [Kostas Daniilidis](https://www.cis.upenn.edu/~kostas/) and Prof.
+          [Petros Maragos](https://robotics.ntua.gr/members/maragos/) in
+          collaboration with the National Technical University of Athens.
 
       - company: GRASP Lab, University of Pennsylvania
         position: Visiting Associate
@@ -87,8 +88,10 @@ cv:
         start_date: 2023-09-01
         highlights:
           - "Current GPA: 9.6/10."
-          - PhD Fellow at the Archimedes Research Unit, Athena Research Center.
-          - Advised by Prof. Kostas Daniilidis and Prof. Petros Maragos.
+          - "Research focus: 3D computer vision, neural radiance fields, projective geometry, and language models."
+          - "Advisors: Prof. [Kostas Daniilidis](https://www.cis.upenn.edu/~kostas/) and Prof. [Petros Maragos](https://robotics.ntua.gr/members/maragos/)."
+          - "Affiliation: PhD Fellow at the Archimedes Research Unit, Athena Research Center."
+          - "Selected coursework: Theoretical Methods of Computer Vision & Signal Processing; Virtual Reality, Haptics and Applications in Telerobotics; Artificial Intelligence and Data Analysis; [Machine Perception](https://sites.google.com/seas.upenn.edu/cis580spr22/home) (UPenn)."
 
       - institution: University of Amsterdam
         location: Amsterdam, Netherlands
@@ -98,9 +101,9 @@ cv:
         end_date: 2023-07-01
         highlights:
           - "Final GPA: 7.55/10."
-          - Thesis on language-driven 3D scene understanding.
-          - Supervised by Prof. Martin R. Oswald and Dr. Silvan Weder.
-          - Graduate coursework included Computer Vision, Deep Learning, Machine Learning, Data Mining, Natural Language Processing, Deep Learning for Natural Language Processing, and Machine Perception.
+          - "Thesis: Language-driven 3D scene understanding."
+          - "Supervisors: Prof. [Martin R. Oswald](https://oswaldm.github.io/) and Dr. [Silvan Weder](https://www.silvanweder.com/)."
+          - "Selected coursework: Computer Vision; Deep Learning; Machine Learning; Data Mining; Natural Language Processing; Deep Learning for Natural Language Processing."
 
       - institution: National Technical University of Athens
         location: Athens, Greece
@@ -110,11 +113,10 @@ cv:
         end_date: 2021-02-01
         highlights:
           - "Final GPA: 8.24/10, estimated at top 12-15%."
-          - Five-year joint degree, 300 ECTS.
-          - Concentration in Signal, Control Systems and Robotics, Software Systems, and Computing Systems.
-          - Undergraduate thesis supervised by Prof. Petros Maragos.
           - "Thesis: Deep Neural Network Architectures for Human Action/Gesture Recognition and Temporal Segmentation in Videos."
-          - Undergraduate coursework included Computer Vision, Intelligent Systems, Pattern Recognition, Robotics, Speech and Language Processing, and Human-Computer Interaction.
+          - "Supervisor: Prof. [Petros Maragos](https://robotics.ntua.gr/members/maragos/)."
+          - "Program details: Five-year joint degree, 300 ECTS; concentration in Signal, Control Systems and Robotics, Software Systems, and Computing Systems."
+          - "Selected coursework: Computer Vision; Intelligent Systems; Pattern Recognition; Robotics; Speech and Language Processing; Human-Computer Interaction."
 
     Publications:
       - title: "VGGT-HPE: Reframing Head Pose Estimation as Relative Pose Prediction"
@@ -201,8 +203,8 @@ cv:
       - title: A Great Moment for Education
         awarder: Ministry of Education & Eurobank EFG
         summary: >-
-          800 euro award for achieving the highest Nationwide University
-          Entrance Examination score at my senior high school.
+          Award for achieving the highest Nationwide University Entrance
+          Examination score at my senior high school.
 
     Languages:
       - name: English
