@@ -8,8 +8,6 @@ profile:
   align: right
   image: square-image.jpg
   image_circular: true
-  more_info: >
-    {% include social.html %}
   address:
   
 
