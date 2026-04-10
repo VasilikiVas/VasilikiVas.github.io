@@ -30,7 +30,6 @@ cv:
       - company: Archimedes Research Unit, Athena Research Center
         position: PhD Fellow
         location: Athens, Greece
-        url: https://archimedesai.gr/en/
         start_date: 2023-09-01
         summary: >-
           Research in computer vision and machine learning, with a focus on
@@ -42,7 +41,6 @@ cv:
       - company: GRASP Lab, University of Pennsylvania
         position: Visiting Associate
         location: Philadelphia, Pennsylvania, USA
-        url: https://grasp.upenn.edu/
         start_date: 2024-01-01
         end_date: 2024-03-01
         highlights:
@@ -84,7 +82,6 @@ cv:
     Education:
       - institution: National Technical University of Athens
         location: Athens, Greece
-        url: https://www.ntua.gr/en/
         area: Computer Vision and Machine Learning
         studyType: PhD Candidate
         start_date: 2023-09-01
@@ -95,9 +92,8 @@ cv:
 
       - institution: University of Amsterdam
         location: Amsterdam, Netherlands
-        url: https://www.uva.nl/en
         area: Artificial Intelligence
-        studyType: MSc
+        studyType: MSc in Artificial Intelligence
         start_date: 2021-09-01
         end_date: 2023-07-01
         highlights:
@@ -108,9 +104,8 @@ cv:
 
       - institution: National Technical University of Athens
         location: Athens, Greece
-        url: https://www.ntua.gr/en/
         area: Electrical and Computer Engineering
-        studyType: BSc & MEng
+        studyType: Diploma/MEng in Electrical & Computer Engineering
         start_date: 2015-09-01
         end_date: 2021-02-01
         highlights:
@@ -221,10 +216,13 @@ cv:
 
     References:
       - name: Kostas Daniilidis
+        email: kostas@cis.upenn.edu
         reference: University of Pennsylvania, PhD advisor.
 
       - name: Petros Maragos
+        email: petros.maragos@athenarc.gr
         reference: National Technical University of Athens, PhD advisor.
 
       - name: Martin R. Oswald
+        email: m.r.oswald@uva.nl
         reference: University of Amsterdam, MSc thesis advisor.
