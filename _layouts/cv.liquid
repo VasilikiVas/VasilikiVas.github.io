@@ -169,14 +169,6 @@ layout: default
           </div>
         {% endif %}
 
-        <!-- Summary -->
-        {% if cv.summary %}
-          <div class="card mt-3 p-3">
-            <h3 class="card-title font-weight-medium">Professional Summary</h3>
-            <p>{{ cv.summary | markdownify | remove: '<p>' | remove: '</p>' }}</p>
-          </div>
-        {% endif %}
-
         <!-- RenderCV Sections - Merge Experience and Volunteer -->
         {% comment %} First, combine Experience and Volunteer entries {% endcomment %}
         {% assign empty_array = '' | split: ',' %}
@@ -200,7 +192,7 @@ layout: default
           {% assign section_entries = section_pair[1] %}
 
           {% comment %} Skip Experience and Volunteer as we've already processed them combined {% endcomment %}
-          {% if section_title == 'Experience' or section_title == 'Volunteer' %}
+          {% if section_title == 'Experience' or section_title == 'Volunteer' or section_title == 'Publications' or section_title == 'Skills' or section_title == 'Languages' or section_title == 'Interests' or section_title == 'Academic Interests' %}
             {% continue %}
           {% endif %}
 
@@ -309,14 +301,6 @@ layout: default
           </div>
         {% endif %}
 
-        <!-- Summary -->
-        {% if site.data.resume.basics.summary %}
-          <div class="card mt-3 p-3">
-            <h3 class="card-title font-weight-medium">Professional Summary</h3>
-            <p>{{ site.data.resume.basics.summary | markdownify | remove: '<p>' | remove: '</p>' }}</p>
-          </div>
-        {% endif %}
-
         <!-- JSONResume Sections - Merge work and volunteer into Experience -->
         {% assign empty_array = '' | split: ',' %}
         {% assign work = site.data.resume.work | default: empty_array %}
@@ -353,54 +337,6 @@ layout: default
             <div>
               {% assign entries = site.data.resume.awards %}
               {% include cv/awards.liquid %}
-            </div>
-          </div>
-        {% endif %}
-
-        <!-- Publications -->
-        {% if site.data.resume.publications.size > 0 %}
-          <a class="anchor" id="publications"></a>
-          <div class="card mt-3 p-3">
-            <h3 class="card-title font-weight-medium">Publications</h3>
-            <div>
-              {% assign entries = site.data.resume.publications %}
-              {% include cv/publications.liquid %}
-            </div>
-          </div>
-        {% endif %}
-
-        <!-- Skills -->
-        {% if site.data.resume.skills.size > 0 %}
-          <a class="anchor" id="skills"></a>
-          <div class="card mt-3 p-3">
-            <h3 class="card-title font-weight-medium">Skills</h3>
-            <div>
-              {% assign entries = site.data.resume.skills %}
-              {% include cv/skills.liquid %}
-            </div>
-          </div>
-        {% endif %}
-
-        <!-- Languages -->
-        {% if site.data.resume.languages.size > 0 %}
-          <a class="anchor" id="languages"></a>
-          <div class="card mt-3 p-3">
-            <h3 class="card-title font-weight-medium">Languages</h3>
-            <div>
-              {% assign entries = site.data.resume.languages %}
-              {% include cv/languages.liquid %}
-            </div>
-          </div>
-        {% endif %}
-
-        <!-- Interests -->
-        {% if site.data.resume.interests.size > 0 %}
-          <a class="anchor" id="interests"></a>
-          <div class="card mt-3 p-3">
-            <h3 class="card-title font-weight-medium">Interests</h3>
-            <div>
-              {% assign entries = site.data.resume.interests %}
-              {% include cv/interests.liquid %}
             </div>
           </div>
         {% endif %}
