@@ -68,6 +68,19 @@ ul.task-list input[type="checkbox"] {
       margin: 0;
     }
   }
+
+  .social {
+    margin-top: 0.75rem;
+
+    .contact-icons {
+      font-size: 2rem;
+      line-height: 1;
+
+      a {
+        margin: 0 0.2rem;
+      }
+    }
+  }
 }
 
 .profile.float-right {
