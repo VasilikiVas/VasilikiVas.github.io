@@ -46,7 +46,7 @@ cv:
         end_date: 2024-03-01
         highlights:
           - Visiting my PhD advisor.
-          - Attended the Machine Perception course.
+          - "Attended the [Machine Perception](https://sites.google.com/seas.upenn.edu/cis580spr22/home) course."
           - Worked on PhD research projects.
 
       - company: ATLAS Lab (UvA-TomTom)
@@ -101,7 +101,7 @@ cv:
         end_date: 2023-07-01
         highlights:
           - "Final GPA: 7.55/10."
-          - "Thesis: Language-driven 3D scene understanding."
+          - "Thesis: [Language-driven 3D scene understanding](https://scripties.uba.uva.nl/search?id=record_53737)."
           - "Supervisors: Prof. [Martin R. Oswald](https://oswaldm.github.io/) and Dr. [Silvan Weder](https://www.silvanweder.com/)."
           - "Selected coursework: Computer Vision; Deep Learning; Machine Learning; Data Mining; Natural Language Processing; Deep Learning for Natural Language Processing."
 
@@ -113,7 +113,7 @@ cv:
         end_date: 2021-02-01
         highlights:
           - "Final GPA: 8.24/10, estimated at top 12-15%."
-          - "Thesis: Deep Neural Network Architectures for Human Action/Gesture Recognition and Temporal Segmentation in Videos."
+          - "Thesis: [Deep Neural Network Architectures for Human Action/Gesture Recognition and Temporal Segmentation in Videos](http://artemis.cslab.ece.ntua.gr:8080/jspui/handle/123456789/17920)."
           - "Supervisor: Prof. [Petros Maragos](https://robotics.ntua.gr/members/maragos/)."
           - "Program details: Five-year joint degree, 300 ECTS; concentration in Signal, Control Systems and Robotics, Software Systems, and Computing Systems."
           - "Selected coursework: Computer Vision; Intelligent Systems; Pattern Recognition; Robotics; Speech and Language Processing; Human-Computer Interaction."
