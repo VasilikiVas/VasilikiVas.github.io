@@ -19,9 +19,25 @@
         {% assign end_date = end_date | strip %}
 
         {% if start_date != '' %}
-          {% assign startDate = start_date | split: '-' | first %}
-          {% assign endDate = end_date | split: '-' | first | default: 'Present' %}
-          {% assign date = startDate | append: ' - ' | append: endDate %}
+          {% assign start_date_parts = start_date | split: '-' %}
+          {% if start_date_parts.size > 1 %}
+            {% assign start_label = start_date | date: '%b %Y' %}
+          {% else %}
+            {% assign start_label = start_date_parts | first %}
+          {% endif %}
+
+          {% if end_date != '' %}
+            {% assign end_date_parts = end_date | split: '-' %}
+            {% if end_date_parts.size > 1 %}
+              {% assign end_label = end_date | date: '%b %Y' %}
+            {% else %}
+              {% assign end_label = end_date_parts | first %}
+            {% endif %}
+          {% else %}
+            {% assign end_label = 'Present' %}
+          {% endif %}
+
+          {% assign date = start_label | append: ' - ' | append: end_label %}
 
           <div class="col-xs-2 col-sm-2 col-md-2 text-center date-column">
             <table class="table-cv">
