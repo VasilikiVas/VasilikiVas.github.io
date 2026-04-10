@@ -54,11 +54,8 @@ cv:
         location: Amsterdam, Netherlands
         start_date: 2022-11-01
         end_date: 2023-07-01
-        summary: >-
-          Worked on my master's thesis on language-driven 3D scene
-          understanding.
         highlights:
-          - Worked with language models, point clouds, 3D learning with 2D supervision, and open-vocabulary tasks.
+          - "Worked on my master's thesis on language-driven 3D scene understanding, with language models, point clouds, 3D learning with 2D supervision, and open-vocabulary tasks."
 
       - company: University of Amsterdam & Vrije Universiteit Amsterdam
         position: Teaching Assistant
@@ -66,10 +63,10 @@ cv:
         start_date: 2022-06-01
         end_date: 2023-05-01
         highlights:
-          - Labs for the first-year master's course Computer Vision 1.
-          - Work colleges for the first-year bachelor's course Data Structures and Algorithms.
-          - Labs for the second-year master's course Socially Intelligent Robotics.
-          - Labs for the first-year bachelor's course Human-Computer Interaction.
+          - "Labs for the first-year master's course [Computer Vision 1](https://cv1-uva.github.io/)."
+          - "Work colleges for the first-year bachelor's course [Data Structures and Algorithms](https://studiegids.vu.nl/en/courses/2025-2026/XB_0151)."
+          - "Labs for the second-year master's course [Socially Intelligent Robotics](https://studiegids.vu.nl/en/courses/2025-2026/XM_0074)."
+          - "Labs for the first-year bachelor's course [Human-Computer Interaction](https://studiegids.vu.nl/en/courses/2025-2026/XB_0153)."
 
       - company: Computer Vision, Speech Communication & Signal Processing Group, NTUA
         position: Undergraduate Research Assistant
