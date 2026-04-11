@@ -48,6 +48,12 @@ body {
   border-radius: 10px;
 }
 
+.paper-table {
+  width: 100%;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+}
+
 .result-block {
   margin-top: 1.5rem;
 }
@@ -67,12 +73,24 @@ body {
   margin-top: 1rem;
 }
 
+.table-block {
+  margin-top: 1.5rem;
+}
+
+.table-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
 .is-disabled {
   opacity: 0.85;
   pointer-events: none;
 }
 
 @media screen and (max-width: 768px) {
+  .table-grid,
   .results-grid {
     grid-template-columns: 1fr;
   }
