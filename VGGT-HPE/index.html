@@ -35,7 +35,7 @@
               <a href="https://vasilikivas.github.io/">Vasiliki Vasileiou</a><sup>1,2,4</sup>,
             </span>
             <span class="author-block">
-              Panagiotis P. Filntisis<sup>2,3</sup>,
+              <a href="https://filby89.github.io/">Panagiotis P. Filntisis</a><sup>2,3</sup>,
             </span>
             <span class="author-block">
               <a href="https://robotics.ntua.gr/members/maragos/">Petros Maragos</a><sup>2,3,4</sup>,
@@ -70,7 +70,7 @@
                   <span class="icon">
                     <i class="ai ai-arxiv"></i>
                   </span>
-                  <span>arXiv / PDF</span>
+                  <span>Paper / PDF</span>
                 </a>
               </span>
               <span class="link-block">
@@ -95,10 +95,6 @@
     <div class="hero-body">
       <div class="content has-text-justified">
         <img src="./static/images/figure1.png" alt="Figure 1 teaser for VGGT-HPE" class="paper-figure">
-        <p class="figure-caption">
-          Figure 1. Absolute methods regress pose from a single image relative to an implicit canonical frame learned during training,
-          while VGGT-HPE predicts the relative transformation between an anchor with known pose and a query.
-        </p>
       </div>
     </div>
   </div>
@@ -143,9 +139,26 @@
           <div>
             <img src="./static/images/figure2.png" alt="Figure 2 method overview for VGGT-HPE" class="paper-figure">
           </div>
-          <p class="figure-caption">
-            Figure 2. Overview of the VGGT-HPE architecture with a frozen VGGT backbone and LoRA adaptation for relative pose prediction.
+          <p>
+            The relative formulation changes the problem in two important ways. First, it removes the need for an implicit
+            canonical frame learned from the training distribution, because the model estimates a displacement between two visible
+            head configurations. Second, it turns the task into a correspondence and matching problem between an anchor and a query,
+            which transfers better across domains than absolute single-image regression.
           </p>
+          <ol>
+            <li>
+              We retain only the camera branch of VGGT and disable the remaining heads, keeping the geometric priors learned during
+              large-scale multi-view pre-training.
+            </li>
+            <li>
+              We adapt the backbone with LoRA in the attention and MLP projections of both frame-level and global transformer
+              blocks, using rank 8 and scaling factor 16.
+            </li>
+            <li>
+              Training uses 25k synthetic FLAME renderings from 250 identities, with paired appearance augmentation and supervision
+              on translation, rotation, and field-of-view so that rotation accuracy benefits from full camera-parameter learning.
+            </li>
+          </ol>
         </div>
       </div>
     </div>
@@ -159,22 +172,35 @@
       <div class="content has-text-justified">
         <p>
           VGGT-HPE achieves state-of-the-art performance on BIWI while training only on synthetic facial renderings.
-          The qualitative comparisons below show more accurate pose recovery on challenging near-profile and upward-looking
-          examples, while the quantitative sweeps show that the relative formulation remains substantially more stable as the
-          anchor-query gap or the absolute query pose becomes harder.
+          Under the shared MTCNN evaluation protocol, the relative model reaches 2.24 degrees yaw error, 3.04 degrees pitch error,
+          and 2.82 degrees mean absolute error, while the absolute single-image variant built on the same VGGT backbone reaches
+          5.15 degrees MAE. This makes the benefit structural rather than architectural: the performance gain comes from the
+          relative formulation itself.
         </p>
         <div class="result-block">
-          <h3 class="title is-4 has-text-centered">Qualitative Results on BIWI</h3>
           <img src="./static/images/figure4.png" alt="Figure 4 qualitative BIWI results for VGGT-HPE" class="paper-figure">
+          <p class="result-copy">
+            Each row shows a different BIWI subject. From left to right: the query frame, the anchor frame with its known pose
+            overlay, the ground-truth pose, our prediction, and three baselines. The relative model stays visually closer to the
+            ground truth across near-profile and upward-looking cases where absolute methods deviate more strongly.
+          </p>
         </div>
         <div class="results-grid">
           <div class="result-card">
-            <h3 class="title is-5 has-text-centered">Neutral-Anchor Delta Sweep</h3>
             <img src="./static/images/figure5.png" alt="Figure 5 BIWI neutral-anchor delta sweep" class="paper-figure">
+            <p class="result-copy">
+              When the anchor is near-neutral and the anchor-query rotation gap increases, VGGT-HPE remains the strongest method
+              across the full range. The gap to absolute baselines widens as the target pose moves farther away from the implicit
+              frontal reference they internalize during training.
+            </p>
           </div>
           <div class="result-card">
-            <h3 class="title is-5 has-text-centered">Query-Pose Sweep with Close Anchors</h3>
             <img src="./static/images/figure6.png" alt="Figure 6 BIWI query-pose sweep" class="paper-figure">
+            <p class="result-copy">
+              When each query is paired with a same-subject anchor whose anchor-query gap is below 5 degrees, VGGT-HPE stays below
+              2 degrees MAE across the full absolute pose range. With a close enough anchor, extreme poses become no harder than
+              frontal ones.
+            </p>
           </div>
         </div>
       </div>
