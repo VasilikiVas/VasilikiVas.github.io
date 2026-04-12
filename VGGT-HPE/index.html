@@ -129,254 +129,313 @@
 
 <section class="section">
   <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Motivation</h2>
-        <div class="content has-text-justified">
-          <p>
-            The dominant paradigm in learned head pose estimation treats the problem as direct regression from a single image
-            to an absolute pose vector — typically three Euler angles (yaw, pitch, roll) and, less commonly, a 3D translation.
-            Methods such as HopeNet [29], 6DRepNet [13], and WHENet [44] train deep networks to map face crops directly to
-            global orientation. This requires the model to internalize a canonical reference frame from the training data - one
-            that is never explicitly provided at test time. More recent works improve robustness through better rotation representations
-            [13], transformer-based modeling [40], or explicit facial geometry [6], but the core formulation remains
-            unchanged. As we show in our experiments, these models tend to degrade for extreme poses, where the implicit anchor
-            - a neutral, frontal configuration baked into the learned weights - lies far from the target.
-          </p>
-          <p>
-            We argue that relative head pose estimation is a fundamentally easier problem. Predicting the rigid transformation
-            between two observed head configurations sidesteps the need for an implicit canonical frame and reduces the
-            task to estimating a displacement. Because it observes both states, the network can solve this via implicit feature
-            matching—shifting the paradigm from absolute classification to direct image matching. This is simpler and transfers
-            better across domains, since relative geometry does not depend on absolute coordinate conventions or appearance
-            distributions specific to the training set. The relative formulation also introduces a practical degree of freedom that
-            absolute methods lack: the anchor can be chosen at test time. In video, for instance, a temporally close frame with
-            known pose keeps the relative rotation gap small, placing the prediction well within the model’s reliable operating
-            range.
-          </p>
-        </div>
-      </div>
+    <div class="paper-panel">
+      <h2 class="title is-3">Motivation</h2>
+      <ul class="motivation-list">
+        <li class="motivation-item">
+          <span class="motivation-fire">🔥</span>
+          <span>The model no longer needs to guess the hidden reference frame.</span>
+        </li>
+        <li class="motivation-item">
+          <span class="motivation-fire">🔥</span>
+          <span>It can do implicit feature matching between two visible head states.</span>
+        </li>
+        <li class="motivation-item">
+          <span class="motivation-fire">🔥</span>
+          <span>The anchor can be chosen at test time, so you can control difficulty by picking a near-neutral or temporally close frame.</span>
+        </li>
+      </ul>
     </div>
   </div>
 </section>
 
 <section class="section">
   <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Method</h2>
-        <div class="content has-text-justified">
-          <p>
-            <strong>Overview.</strong> Our goal is to estimate the pose of a query head image by predicting its rigid transformation relative
-            to an anchor image with known pose. The key intuition is that absolute methods must map a single crop to a pose defined in
-            an implicit canonical frame that is never provided at test time, while the relative formulation turns the problem into image
-            matching between two visible inputs — a task that is geometrically simpler and naturally sidesteps the domain gap. We build
-            on VGGT [33], a geometry foundation model whose camera pose branch already estimates relative rigid transformations between
-            two images, and specialize it to the facial domain via LoRA fine-tuning on synthetic FLAME renderings.
-          </p>
+    <h2 class="title is-3">Methodology</h2>
+    <p class="section-intro">
+      Our goal is to estimate the pose of a query head image by predicting its rigid transformation relative to an anchor image with known pose.
+    </p>
+    <div class="method-grid">
+      <div class="paper-panel method-visual">
+        <img src="./static/images/figure2.png" alt="Figure 2 method overview for VGGT-HPE" class="paper-figure">
+      </div>
+      <div class="method-steps">
+        <article class="step-card">
+          <div class="step-number">1</div>
           <div>
-            <img src="./static/images/figure2.png" alt="Figure 2 method overview for VGGT-HPE" class="paper-figure">
+            <h3>Input Pair</h3>
+            <p>Input: anchor image + query image.</p>
           </div>
-          <p>
-            <strong>Backbone and Adaptation.</strong> VGGT is a feed-forward transformer pretrained on large-scale multi-view data to jointly
-            predict camera parameters, depth, point maps, and correspondences. We retain only the camera branch and disable all other
-            heads. Each camera pose is encoded as p = [t, q, ϕh , ϕw ], where t ∈ R3 is translation, q ∈ R4 is a quaternion rotation, and
-            ϕh , ϕw are the horizontal and vertical fields of view. To adapt VGGT without destroying its pretrained priors, we use LoRA [15]:
-            for each pretrained linear layer W, a low-rank update ΔW = BA is learned while W remains frozen, yielding W′ = W + BA.
-            LoRA modules are inserted into the attention and MLP projections of both the frame-level and global transformer blocks,
-            with rank 8 and scaling factor 16.
-          </p>
-          <p>
-            <strong>Relative Formulation.</strong> Given an anchor image Ia with known pose Ta ∈ SE(3) and a query image Iq with unknown
-            pose Tq, the model predicts the relative transformation Tq←a = Tq Ta−1. The absolute query pose is then recovered by
-            composition: T̂q = T̂q←a Ta.
-          </p>
-          <p>
-            The advantage over absolute regression is twofold. First, absolute methods must map a single crop to a pose defined
-            in a canonical frame that is never provided — it exists only implicitly in the training data. The relative formulation removes
-            this requirement: the model just estimates how much the head moved between two images it can see. Second, by conditioning
-            on a pair of images, the model can perform implicit feature matching between anchor and query, grounding its prediction
-            in visual correspondence rather than memorized pose distributions. This makes the task closer to image matching than to
-            classification, which is both geometrically simpler and naturally robust to domain shift — the relative displacement between
-            two views of a head looks the same whether the images are synthetic or real.
-          </p>
-        </div>
+        </article>
+        <article class="step-card">
+          <div class="step-number">2</div>
+          <div>
+            <h3>Backbone</h3>
+            <p>Backbone: VGGT camera branch.</p>
+          </div>
+        </article>
+        <article class="step-card">
+          <div class="step-number">3</div>
+          <div>
+            <h3>Adaptation and Output</h3>
+            <p>Adaptation: LoRA fine-tuning, backbone mostly frozen. Output: relative transform T<sub>q←a</sub>.</p>
+          </div>
+        </article>
+        <article class="step-card">
+          <div class="step-number">4</div>
+          <div>
+            <h3>Synthetic Training Setup</h3>
+            <p>Trained only on synthetic FLAME renderings. 250 identities, varying hairstyles, expressions, viewpoints. Supervised on rotation, translation, and FoV.</p>
+            <img src="./static/images/figure3.jpg" alt="Samples from the synthetic training set" class="step-thumb">
+          </div>
+        </article>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section">
+<section class="section" id="results">
   <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Synthetic Training Data</h2>
-        <div class="content has-text-justified">
-          <p>
-            Synthetic Training Data. We generate training pairs using FLAME [24] head meshes rendered in Blender [3], following
-            a pipeline similar to [11]. The dataset comprises 250 identities — 200 with hairstyles from HAAR [30] and 50 bald — each
-            rendered under two HDRI environment maps with ten FLAME expressions and five viewpoints per expression, yielding 25k
-            images. Albedo is sampled from 54 textures covering diverse skin tones. Each pair shares identity and lighting while expression
-            and viewpoint vary freely. At training time, we crop a square face region with random margin and shift, updating intrinsics
-            accordingly, and apply pairwise appearance augmentation (color jitter, gamma, CLAHE, RGB shift, blur, noise) coherently
-            across both views.
-          </p>
-          <div>
-            <img src="./static/images/figure3.jpg" alt="Figure 3 samples from the synthetic training set" class="paper-figure">
+    <h2 class="title is-3">Results</h2>
+    <p class="section-intro">
+      VGGT-HPE achieves the lowest yaw and pitch errors among all methods, while being the only method trained exclusively on synthetic data.
+    </p>
+
+    <div class="paper-panel">
+      <h3 class="subsection-title">Qualitative Results</h3>
+      <img src="./static/images/figure4.png" alt="Figure 4 qualitative BIWI results for VGGT-HPE" class="paper-figure">
+      <p class="panel-copy">
+        Figure 4. Qualitative results on BIWI. Each row shows a different subject. From left to right: the query frame, the anchor frame with its known pose overlay, the ground-truth pose, our prediction (VGGT-HPE), and three baselines (6DRepNet, TokenHPE, TRG).
+      </p>
+    </div>
+
+    <div class="paper-panel">
+      <h3 class="subsection-title">Main BIWI Results</h3>
+      <p class="panel-copy">
+        Table 1 presents the main cross-domain evaluation, split into reported numbers and reproduced results under a shared MTCNN protocol.
+      </p>
+      <div class="table-scroll">
+        <table class="paper-metrics">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Yaw ↓</th>
+              <th>Pitch ↓</th>
+              <th>Roll ↓</th>
+              <th>MAE ↓</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="table-section-row"><td colspan="6">Reported numbers</td></tr>
+            <tr><td>Dlib</td><td>11.86</td><td>13.00</td><td>19.56</td><td>14.81</td><td><span class="data-chip data-r">R</span></td></tr>
+            <tr><td>3DDFA</td><td>5.50</td><td>41.90</td><td>13.22</td><td>19.07</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>EVA-GCN</td><td>4.01</td><td>4.78</td><td>2.98</td><td>3.92</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>HopeNet</td><td>4.81</td><td>6.61</td><td>3.27</td><td>4.89</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>QuatNet</td><td>4.01</td><td>5.49</td><td>2.94</td><td>4.15</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>Liu et al.</td><td>4.12</td><td>5.61</td><td>3.15</td><td>4.29</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>FSA-Net</td><td>4.27</td><td>4.96</td><td>2.76</td><td>4.00</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>HPE</td><td>4.57</td><td>5.18</td><td>3.12</td><td>4.29</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>WHENet-V</td><td>3.60</td><td>4.10</td><td>2.73</td><td>3.48</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>RetinaFace</td><td>4.07</td><td>6.42</td><td>2.97</td><td>4.49</td><td><span class="data-chip data-r">R</span></td></tr>
+            <tr><td>FDN</td><td>4.52</td><td>4.70</td><td>2.56</td><td>3.93</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>MNN</td><td>3.98</td><td>4.61</td><td>2.39</td><td>3.66</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>TriNet</td><td>3.05</td><td>4.76</td><td>4.11</td><td>3.97</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>6DRepNet</td><td>3.24</td><td>4.48</td><td>2.68</td><td>3.47</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>Cao et al.</td><td>4.21</td><td>3.52</td><td>3.10</td><td>3.61</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>TokenHP</td><td>3.95</td><td>4.51</td><td>2.71</td><td>3.72</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>Cobo et al.</td><td>4.58</td><td>4.65</td><td>2.71</td><td>3.98</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>img2pose</td><td>4.57</td><td>3.55</td><td>3.24</td><td>3.79</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>PerspNet</td><td>3.10</td><td>3.37</td><td>2.38</td><td>2.95</td><td><span class="data-chip data-r">R</span></td></tr>
+            <tr><td>TRG</td><td>3.04</td><td>3.44</td><td>1.78</td><td>2.75</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr class="ours-row"><td>VGGT-HPE (Rel., ours)</td><td>2.24</td><td>3.04</td><td>3.17</td><td>2.82</td><td><span class="data-chip data-s">S</span></td></tr>
+            <tr class="table-section-row"><td colspan="6">Reproduced under shared MTCNN protocol</td></tr>
+            <tr><td>6DRepNet</td><td>3.74</td><td>4.95</td><td>3.04</td><td>3.91</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>TokenHPE-v1</td><td>5.57</td><td>6.23</td><td>3.79</td><td>5.20</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>TRG</td><td>4.58</td><td>7.18</td><td>3.68</td><td>5.15</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>VGGT-HPE-Abs (ours)</td><td>4.90</td><td>7.01</td><td>3.53</td><td>5.15</td><td><span class="data-chip data-s">S</span></td></tr>
+            <tr class="ours-row"><td>VGGT-HPE (Rel., ours)</td><td>2.24</td><td>3.04</td><td>3.17</td><td>2.82</td><td><span class="data-chip data-s">S</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">R = real, M = mixed, S = synthetic.</p>
+    </div>
+
+    <div class="paper-panel">
+      <h3 class="subsection-title">Controlled Benchmarks: Easy vs Hard Pairs</h3>
+      <p class="panel-copy">
+        To study how prediction difficulty scales with the anchor-target rotation gap, we construct two complementary benchmarks from BIWI.
+      </p>
+      <div class="table-columns">
+        <div>
+          <h4 class="mini-title">Hard benchmark</h4>
+          <div class="table-scroll">
+            <table class="paper-metrics">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Yaw ↓</th>
+                  <th>Pitch ↓</th>
+                  <th>Roll ↓</th>
+                  <th>MAE ↓</th>
+                  <th>Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>VGGT-HPE-Abs</td><td>40.74</td><td>18.65</td><td>33.66</td><td>31.02</td><td><span class="data-chip data-s">S</span></td></tr>
+                <tr><td>TokenHPE</td><td>21.85</td><td>26.35</td><td>19.34</td><td>22.51</td><td><span class="data-chip data-m">M</span></td></tr>
+                <tr><td>TRG</td><td>8.95</td><td>33.88</td><td>8.87</td><td>17.23</td><td><span class="data-chip data-m">M</span></td></tr>
+                <tr><td>6DRepNet</td><td>14.27</td><td>18.91</td><td>6.81</td><td>13.33</td><td><span class="data-chip data-m">M</span></td></tr>
+                <tr class="ours-row"><td>VGGT-HPE (Rel., ours)</td><td>3.81</td><td>15.87</td><td>6.93</td><td>8.87</td><td><span class="data-chip data-s">S</span></td></tr>
+              </tbody>
+            </table>
           </div>
-          <p>
-            Figure 3. Samples from our synthetic training set. Each row shows a single identity rendered under varying viewpoints,
-            expressions, and HDRI environment maps.
+          <p class="caption-note">
+            BIWI hard benchmark (360 neutral-anchor / extreme-query pairs).
+          </p>
+        </div>
+        <div>
+          <h4 class="mini-title">Easy benchmark</h4>
+          <div class="table-scroll">
+            <table class="paper-metrics">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Yaw ↓</th>
+                  <th>Pitch ↓</th>
+                  <th>Roll ↓</th>
+                  <th>MAE ↓</th>
+                  <th>Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>VGGT-HPE-Abs</td><td>5.62</td><td>2.26</td><td>4.06</td><td>3.98</td><td><span class="data-chip data-s">S</span></td></tr>
+                <tr><td>TokenHPE</td><td>3.41</td><td>5.99</td><td>1.43</td><td>3.61</td><td><span class="data-chip data-m">M</span></td></tr>
+                <tr><td>TRG</td><td>3.59</td><td>4.24</td><td>2.52</td><td>3.45</td><td><span class="data-chip data-m">M</span></td></tr>
+                <tr><td>6DRepNet</td><td>2.31</td><td>4.93</td><td>1.14</td><td>2.80</td><td><span class="data-chip data-m">M</span></td></tr>
+                <tr class="ours-row"><td>VGGT-HPE (Rel., ours)</td><td>1.17</td><td>0.74</td><td>0.97</td><td>0.96</td><td><span class="data-chip data-s">S</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="caption-note">
+            BIWI easy neutral-anchor benchmark (360 pairs; pair delta mean: 3.82°).
           </p>
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<section class="hero is-small" id="results">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <h2 class="title is-3">Results</h2>
-      <div class="content has-text-justified">
-        <p>
-          In the reported-numbers section, VGGT-HPE (Rel.) achieves the lowest yaw (2.24◦ ) and pitch (3.04◦ ) errors among all methods,
-          and the second-lowest MAE (2.82◦ ), behind only TRG (2.75◦ ), while being the only method trained exclusively on synthetic data.
-          Under the controlled shared protocol, VGGT-HPE (Rel.) achieves the lowest MAE (2.82◦ ) among the baselines.
-        </p>
-        <p>
-          The key takeaway emerges from comparing our two variants: VGGT-HPE-Abs, which shares the same backbone and synthetic
-          training data but operates in absolute single-image mode, reaches only 5.15◦ , while switching to the relative formulation yields
-          the best result in the table. This confirms that the advantage is structural rather than architectural. Absolute methods must
-          internalize a canonical reference frame from the training data, making them sensitive to domain shift. The relative formulation
-          sidesteps this by predicting a displacement between two explicitly provided views, removing the dependence on an implicit anchor.
-        </p>
-        <div class="result-block">
-          <img src="./static/images/figure4.png" alt="Figure 4 qualitative BIWI results for VGGT-HPE" class="paper-figure">
+    <div class="paper-panel">
+      <h3 class="subsection-title">Error Analysis</h3>
+      <div class="results-grid">
+        <div class="result-card">
+          <img src="./static/images/figure5.png" alt="Figure 5 BIWI neutral-anchor evaluation" class="paper-figure">
           <p class="result-copy">
-            Figure 4. Qualitative results on BIWI. Each row shows a different subject. From left to right: the query frame, the anchor frame
-            with its known pose overlay, the ground-truth pose, our prediction (VGGT-HPE), and three baselines (6DRepNet, TokenHPE,
-            TRG). Our method produces pose estimates that are visually closer to the ground truth across a range of head orientations,
-            including challenging near-profile and upward-looking poses where absolute methods exhibit larger deviations.
+            Figure 5. BIWI neutral-anchor evaluation as a function of anchor-query rotation gap. The upper plot reports rotation MAE, while the lower band shows the number of sampled pairs per bin.
           </p>
         </div>
-        <div class="results-grid">
-          <div class="result-card">
-            <img src="./static/images/figure5.png" alt="Figure 5 BIWI neutral-anchor evaluation" class="paper-figure">
-            <p class="result-copy">
-              Figure 5. BIWI neutral-anchor evaluation as a function of anchor-query rotation gap. The upper plot reports rotation MAE,
-              while the lower band shows the number of sampled pairs per bin. VGGT-HPE remains the strongest method across the full range.
-            </p>
-          </div>
-          <div class="result-card">
-            <img src="./static/images/figure6.png" alt="Figure 6 BIWI query-pose evaluation" class="paper-figure">
-            <p class="result-copy">
-              Figure 6. BIWI query-pose evaluation as a function of absolute query pose. For VGGT-HPE, each query is paired with a same-subject
-              anchor whose anchor-query geodesic gap is below 5◦ . The upper plot reports rotation MAE, while the lower band shows
-              the number of sampled pairs per bin.
-            </p>
-          </div>
+        <div class="result-card">
+          <img src="./static/images/figure6.png" alt="Figure 6 BIWI query-pose evaluation" class="paper-figure">
+          <p class="result-copy">
+            Figure 6. BIWI query-pose evaluation as a function of absolute query pose. For VGGT-HPE, each query is paired with a same-subject anchor whose anchor-query geodesic gap is below 5°.
+          </p>
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Tables</h2>
-        <div class="content has-text-justified">
-          <h3 class="title is-4">4.2. Cross-Domain Evaluation on BIWI</h3>
-          <p>
-            Table 1 presents the main cross-domain evaluation, split into two sections. The top section collects numbers reported in the
-            original publications (following the compilation of [6]); however, these results are not directly comparable, as each method
-            uses its own face detector, crop strategy, and evaluation subset. To enable a fair comparison, the bottom section reproduces
-            all methods under a shared evaluation protocol using MTCNN [42] detection, following the widely adopted setup of 6DRepNet [13].
-            For TokenHPE, only the v1 checkpoint is publicly available, so we report results with that model. For TRG, we observed that
-            the authors evaluate only on the subset of BIWI frames for which their preprocessing pipeline (based on FAN and MTCNN)
-            successfully detects a face; since this filtering is not documented, we re-ran TRG under our shared protocol for consistency.
-            For VGGT-HPE (Rel.), we use as a fixed anchor throughout each BIWI subject sequence the first frame of each recording,
-            requiring essentially only a single ground-truth pose per subject rather than per-frame annotations.
-          </p>
-          <div class="table-block">
-            <img src="./static/images/table1.png" alt="Table 1 cross-domain evaluation on BIWI" class="paper-table">
+    <div class="paper-panel">
+      <h3 class="subsection-title">Ablation Studies</h3>
+      <p class="panel-copy">
+        Full fine-tuning destroys the pretrained representations and performs worst on both datasets. LoRA strikes the best balance, preserving the pretrained geometric priors while adapting to the facial domain.
+      </p>
+      <div class="table-scroll">
+        <table class="paper-metrics paper-metrics-wide">
+          <thead>
+            <tr>
+              <th></th>
+              <th colspan="4">Synthetic</th>
+              <th colspan="4">BIWI</th>
+            </tr>
+            <tr>
+              <th>Variant</th>
+              <th>Yaw ↓</th>
+              <th>Pitch ↓</th>
+              <th>Roll ↓</th>
+              <th>MAE ↓</th>
+              <th>Yaw ↓</th>
+              <th>Pitch ↓</th>
+              <th>Roll ↓</th>
+              <th>MAE ↓</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="table-section-row"><td colspan="9">Adaptation strategy</td></tr>
+            <tr><td>Full finetune</td><td>38.00</td><td>33.76</td><td>31.12</td><td>34.29</td><td>23.07</td><td>17.90</td><td>10.05</td><td>17.00</td></tr>
+            <tr><td>From scratch</td><td>9.21</td><td>15.07</td><td>14.05</td><td>12.78</td><td>7.71</td><td>8.12</td><td>6.94</td><td>7.59</td></tr>
+            <tr><td>Head-only</td><td>3.82</td><td>6.50</td><td>5.89</td><td>5.40</td><td>18.08</td><td>15.17</td><td>8.25</td><td>13.83</td></tr>
+            <tr class="ours-row"><td>LoRA (ours)</td><td>2.46</td><td>4.65</td><td>4.51</td><td>3.87</td><td>2.24</td><td>3.04</td><td>3.17</td><td>2.82</td></tr>
+            <tr class="table-section-row"><td colspan="9">Loss and formulation variants (all LoRA)</td></tr>
+            <tr><td>Small-Gap</td><td>17.03</td><td>23.20</td><td>21.77</td><td>20.66</td><td>7.38</td><td>7.07</td><td>3.88</td><td>6.11</td></tr>
+            <tr><td>Abs. Pair</td><td>3.12</td><td>4.59</td><td>7.01</td><td>4.91</td><td>3.61</td><td>6.99</td><td>6.49</td><td>5.69</td></tr>
+            <tr><td>Abs. Single</td><td>2.44</td><td>4.03</td><td>3.24</td><td>3.24</td><td>4.90</td><td>7.01</td><td>3.53</td><td>5.15</td></tr>
+            <tr><td>T-Aux, No FoV</td><td>2.94</td><td>5.45</td><td>6.01</td><td>4.80</td><td>2.94</td><td>3.91</td><td>3.90</td><td>3.59</td></tr>
+            <tr><td>No FoV</td><td>2.39</td><td>4.13</td><td>4.19</td><td>3.57</td><td>2.64</td><td>4.05</td><td>3.61</td><td>3.43</td></tr>
+            <tr><td>T-Aux</td><td>2.43</td><td>4.37</td><td>4.48</td><td>3.76</td><td>2.76</td><td>3.10</td><td>3.90</td><td>3.25</td></tr>
+            <tr><td>Geo Loss</td><td>2.28</td><td>3.99</td><td>3.76</td><td>3.34</td><td>2.95</td><td>3.24</td><td>3.32</td><td>3.17</td></tr>
+            <tr><td>Rot.-Only</td><td>2.40</td><td>4.31</td><td>4.06</td><td>3.59</td><td>2.58</td><td>3.48</td><td>3.32</td><td>3.12</td></tr>
+            <tr><td>Baseline</td><td>2.19</td><td>4.15</td><td>3.96</td><td>3.43</td><td>2.61</td><td>3.17</td><td>3.31</td><td>3.03</td></tr>
+            <tr class="ours-row"><td>VGGT-HPE</td><td>2.46</td><td>4.65</td><td>4.51</td><td>3.87</td><td>2.24</td><td>3.04</td><td>3.17</td><td>2.82</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="panel-copy">
+        Performance naturally degrades compared to using the ground-truth anchor, but the drop is moderate when the anchor estimator is reasonably accurate.
+      </p>
+      <div class="table-columns">
+        <div>
+          <h4 class="mini-title">Full BIWI with external anchor</h4>
+          <div class="table-scroll">
+            <table class="paper-metrics">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Yaw ↓</th>
+                  <th>Pitch ↓</th>
+                  <th>Roll ↓</th>
+                  <th>MAE ↓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="ours-row"><td>VGGT-HPE (Rel., GT anchor)</td><td>2.24</td><td>3.04</td><td>3.17</td><td>2.82</td></tr>
+                <tr><td>VGGT-HPE (Rel., VGGT-HPE-Abs anchor)</td><td>4.56</td><td>5.28</td><td>3.42</td><td>4.42</td></tr>
+                <tr><td>VGGT-HPE (Rel., 6DRepNet anchor)</td><td>2.89</td><td>6.05</td><td>3.29</td><td>4.08</td></tr>
+                <tr><td>VGGT-HPE (Rel., TokenHPE anchor)</td><td>3.35</td><td>7.30</td><td>3.91</td><td>4.85</td></tr>
+                <tr><td>VGGT-HPE (Rel., TRG anchor)</td><td>4.02</td><td>12.03</td><td>7.13</td><td>7.73</td></tr>
+              </tbody>
+            </table>
           </div>
-          <h3 class="title is-4">4.3. Controlled Anchor Benchmarks: Easy and Hard Pairs</h3>
-          <p>
-            To study how prediction difficulty scales with the anchor–target rotation gap, we construct two complementary benchmarks
-            from BIWI, each with 360 pairs per subject. In both cases the anchor is near-neutral, so the absolute baselines, which ignore
-            the anchor entirely, are evaluated directly on the target frames. In the hard benchmark these targets are extreme poses; in the
-            easy one they are near-frontal. This lets us study how the different absolute and relative models behave in both easy and hard
-            (extreme) poses.
-          </p>
-          <p>
-            Hard-pair benchmark. Each pair is formed by selecting a near-neutral anchor frame and an extreme-pose query frame, with a
-            mean anchor–target rotation gap of approximately 70◦ . Results are shown in Table 2. The performance gap between VGGT-HPE
-            (Rel.) and the absolute baselines widens substantially under these conditions: while 6DRepNet, the strongest absolute baseline,
-            achieves 13.33◦ MAE, VGGT-HPE (Rel.) reaches 8.87◦ , a 33% relative improvement. The absolute variant of our model collapses
-            entirely to 31.02◦ , confirming once more that the benefits stem from the relative formulation rather than the backbone.
-          </p>
-          <div class="table-block">
-            <img src="./static/images/table2.png" alt="Table 2 BIWI hard benchmark" class="paper-table">
-          </div>
-          <p>
-            Easy-pair benchmark. Here the situation is reversed: anchor and target are both near-neutral, with a mean rotation gap of only
-            3.82◦ . In this regime the absolute baselines are evaluated on their easiest samples — target poses lie close to the implicit canonical
-            frame that these methods internalize during training. Results are shown in Table 3. Even in this favorable setting for absolute
-            methods, VGGT-HPE (Rel.) achieves 0.96◦ MAE, nearly three times better than 6DRepNet (2.80◦ ) and the absolute VGGT
-            variant (3.98◦ ). This result highlights a key practical advantage of the relative formulation: when the anchor–target gap is small,
-            the prediction problem becomes almost trivially easy.
-          </p>
-          <div class="table-block">
-            <img src="./static/images/table3.png" alt="Table 3 BIWI easy neutral-anchor benchmark" class="paper-table">
-          </div>
-          <h3 class="title is-4">4.5. Ablation Studies</h3>
-          <p>
-            Table 4 presents ablation results on both the synthetic validation set and BIWI. The top section compares adaptation strategies
-            for the VGGT backbone. Full fine-tuning destroys the pretrained representations and performs worst on both datasets. Training
-            from scratch (i.e., without pretrained weights) does better but still lags far behind LoRA on BIWI (7.59◦ vs. 2.82◦ ). Head-only
-            tuning is an interesting case: it achieves reasonable synthetic error (5.40◦ ) but collapses on BIWI (13.83◦ ), suggesting it overfits
-            to the synthetic pose distribution without learning transferable features. LoRA strikes the best balance, preserving the pretrained
-            geometric priors while adapting to the facial domain.
-          </p>
-          <p>
-            The bottom section ablates loss and formulation variants. The absolute single-image variant achieves the best synthetic MAE
-            (3.24◦ ) but degrades to 5.15◦ on BIWI, while VGGT-HPE reaches 2.82◦ — a clear sign that the relative formulation transfers
-            better across domains. The Small-Gap variant performs worst on both datasets, confirming that sufficient anchor–query displacement
-            is needed during training. Among the loss components, removing field-of-view prediction (No FoV; 3.43◦ ) and translation
-            supervision (T-Aux, No FoV; 3.59◦ ) each hurt cross-domain performance. The geodesic loss and rotation-only variants are
-            competitive, but the full combination in VGGT-HPE yields the best cross-domain result.
-          </p>
-          <div class="table-block">
-            <img src="./static/images/table4.png" alt="Table 4 ablation study on synthetic validation data and BIWI" class="paper-table">
-          </div>
-          <h3 class="title is-4">4.6. Relaxing the Ground-Truth Anchor Assumption</h3>
-          <p>
-            A practical limitation of the relative formulation is that it requires a known anchor pose at test time. To understand how sensitive
-            our method is to the anchor pose quality, we replace the ground-truth anchor pose with the prediction of an external absolute
-            model. For each BIWI anchor–query pair, we estimate the anchor pose using one of VGGT-HPE-Abs, 6DRepNet, TokenHPE,
-            or TRG, and use that prediction as the reference for VGGT-HPE (Rel.). The model then predicts the relative transformation with
-            respect to the predicted anchor and composes it to recover an absolute query pose. Since any error in the anchor estimate propagates
-            directly into the composed query pose as a constant offset, this setting is expected to increase the overall error proportionally
-            to the accuracy of the anchor model. Results on the full BIWI set and the hard subset are shown in Tables 5 and 6, respectively.
-          </p>
-          <p>
-            Performance naturally degrades compared to using the ground-truth anchor, but the drop is moderate when the anchor estimator
-            is reasonably accurate. With a 6DRepNet anchor, for instance, VGGT-HPE (Rel.) reaches 4.08◦ on the full set — worse than
-            with ground truth (2.82◦ ), but still competitive with the absolute baselines in Table 1. On the hard subset the same trend holds:
-            the relative pipeline with a 6DRepNet anchor (10.26◦ ) still outperforms every standalone absolute method except 6DRepNet
-            itself. These results suggest that the ground-truth anchor requirement is not a hard constraint — a reasonable absolute estimator
-            can provide a sufficient reference frame, and the relative formulation remains beneficial even when the anchor is imperfect.
-          </p>
-          <div class="table-grid">
-            <div class="table-block">
-              <img src="./static/images/table5.png" alt="Table 5 relaxing the ground-truth anchor assumption on the full BIWI set" class="paper-table">
-            </div>
-            <div class="table-block">
-              <img src="./static/images/table6.png" alt="Table 6 relaxing the ground-truth anchor assumption on the hard BIWI subset" class="paper-table">
-            </div>
+        </div>
+        <div>
+          <h4 class="mini-title">Hard BIWI subset with external anchor</h4>
+          <div class="table-scroll">
+            <table class="paper-metrics">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Yaw ↓</th>
+                  <th>Pitch ↓</th>
+                  <th>Roll ↓</th>
+                  <th>MAE ↓</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="ours-row"><td>VGGT-HPE (Rel., GT anchor)</td><td>3.81</td><td>15.87</td><td>6.93</td><td>8.87</td></tr>
+                <tr><td>VGGT-HPE (Rel., VGGT-HPE-Abs anchor)</td><td>6.93</td><td>17.36</td><td>8.68</td><td>10.99</td></tr>
+                <tr><td>VGGT-HPE (Rel., 6DRepNet anchor)</td><td>4.81</td><td>19.36</td><td>6.62</td><td>10.26</td></tr>
+                <tr><td>VGGT-HPE (Rel., TokenHPE anchor)</td><td>5.92</td><td>20.31</td><td>7.44</td><td>11.22</td></tr>
+                <tr><td>VGGT-HPE (Rel., TRG anchor)</td><td>7.07</td><td>21.82</td><td>17.00</td><td>15.30</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
