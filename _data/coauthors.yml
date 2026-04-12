@@ -2,6 +2,26 @@
   - firstname: ["Panagiotis", "Panagiotis P.", "P."]
     url: https://filby89.github.io/
 
+"van de geijn":
+  - firstname: ["Chase", "Chase Myers"]
+    url: https://chasevdg.github.io/
+
+"geijn":
+  - firstname: ["Chase", "Chase Myers"]
+    url: https://chasevdg.github.io/
+
+"kyriacou":
+  - firstname: ["Victor"]
+    url: https://scholar.google.com/citations?user=KSr6u7cAAAAJ&hl=en
+
+"papadopoulou":
+  - firstname: ["Irene"]
+    url: https://scholar.google.com/citations?user=7y0XsaQAAAAJ&hl=en
+
+"kardaris":
+  - firstname: ["Nikolaos"]
+    url: https://robotics.ntua.gr/members/nkardaris/
+
 "maragos":
   - firstname: ["Petros"]
     url: https://robotics.ntua.gr/members/maragos/

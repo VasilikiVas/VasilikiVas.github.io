@@ -1,6 +1,6 @@
 ---
 layout: about
-title: about
+title: About
 permalink: /
 subtitle: PhD Candidate, <a href="https://www.ntua.gr/en/" target="_blank">National Technical University of Athens</a> · <a href="https://archimedesai.gr/en/" target="_blank">Archimedes</a> · <a href="https://heron-robotics-coe.eu/" target="_blank">HERON</a>
 
