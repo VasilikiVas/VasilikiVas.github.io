@@ -46,12 +46,16 @@ body {
   letter-spacing: -0.03em;
 }
 
-.publication-authors a {
-  color: hsl(204, 86%, 53%) !important;
+.publication-authors a,
+.publication-authors a:visited,
+a:not(.button),
+a:not(.button):visited {
+  color: var(--paper-steel) !important;
 }
 
 .publication-authors a:hover,
 .footer a:hover {
+  color: var(--paper-accent) !important;
   text-decoration: underline;
 }
 
