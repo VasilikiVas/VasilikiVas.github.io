@@ -2,6 +2,8 @@
   --paper-ink: #153243;
   --paper-steel: #4f6d7a;
   --paper-accent: #c86b49;
+  --paper-link: #00cc00;
+  --paper-link-hover: #00a300;
   --paper-accent-soft: #f5e8e1;
   --paper-bg: #f6f1e8;
   --paper-panel: #fffdf8;
@@ -50,12 +52,12 @@ body {
 .publication-authors a:visited,
 a:not(.button),
 a:not(.button):visited {
-  color: var(--paper-steel) !important;
+  color: var(--paper-link) !important;
 }
 
 .publication-authors a:hover,
 .footer a:hover {
-  color: var(--paper-accent) !important;
+  color: var(--paper-link-hover) !important;
   text-decoration: underline;
 }
 
