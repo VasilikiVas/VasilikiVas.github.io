@@ -120,20 +120,24 @@ body {
   line-height: 1;
 }
 
-.method-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-  gap: 1.5rem;
-  align-items: start;
+.method-hero {
+  margin-top: 0;
 }
 
-.method-visual {
-  margin-top: 0;
+.method-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 1.5rem;
+  align-items: start;
 }
 
 .method-steps {
   display: grid;
   gap: 1rem;
+}
+
+.method-side {
+  display: block;
 }
 
 .step-card {
@@ -172,11 +176,18 @@ body {
 .step-thumb {
   margin-top: 0.9rem;
   width: 100%;
-  max-width: 240px;
+  max-width: 100%;
+  aspect-ratio: 4 / 3;
   display: block;
+  object-fit: cover;
+  object-position: center;
   border: 1px solid var(--paper-line);
   border-radius: 14px;
   box-shadow: 0 10px 24px rgba(21, 50, 67, 0.08);
+}
+
+.step-card-featured {
+  height: 100%;
 }
 
 .subsection-title {
@@ -216,7 +227,7 @@ body {
 
 .table-scroll {
   margin-top: 1rem;
-  overflow-x: auto;
+  overflow: hidden;
   border: 1px solid var(--paper-line);
   border-radius: 18px;
   background: #fff;
@@ -224,28 +235,31 @@ body {
 
 .paper-metrics {
   width: 100%;
-  min-width: 640px;
   border-collapse: collapse;
-  font-size: 0.92rem;
+  table-layout: fixed;
+  font-size: 0.8rem;
 }
 
 .paper-metrics-wide {
-  min-width: 920px;
+  font-size: 0.72rem;
 }
 
 .paper-metrics th,
 .paper-metrics td {
-  padding: 0.68rem 0.75rem;
+  padding: 0.58rem 0.45rem;
   border-bottom: 1px solid rgba(21, 50, 67, 0.09);
   text-align: right;
   vertical-align: middle;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  font-variant-numeric: tabular-nums;
 }
 
 .paper-metrics th:first-child,
 .paper-metrics td:first-child {
   text-align: left;
   white-space: normal;
+  width: 26%;
 }
 
 .paper-metrics thead th {
@@ -311,7 +325,7 @@ body {
 }
 
 @media screen and (max-width: 900px) {
-  .method-grid,
+  .method-layout,
   .results-grid,
   .table-columns {
     grid-template-columns: 1fr;
@@ -336,6 +350,10 @@ body {
   }
 
   .paper-metrics {
-    font-size: 0.86rem;
+    font-size: 0.68rem;
+  }
+
+  .paper-metrics-wide {
+    font-size: 0.62rem;
   }
 }
