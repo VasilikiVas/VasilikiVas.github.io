@@ -138,7 +138,7 @@ a:not(.button):visited {
 
 .method-layout {
   display: grid;
-  grid-template-columns: minmax(280px, 0.68fr) minmax(380px, 1.32fr);
+  grid-template-columns: minmax(300px, 0.9fr) minmax(320px, 1.1fr);
   gap: 2rem;
   align-items: stretch;
 }
@@ -153,7 +153,8 @@ a:not(.button):visited {
 }
 
 .method-side {
-  display: block;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .step-card {
@@ -206,6 +207,7 @@ a:not(.button):visited {
 
 .step-card-featured {
   height: 100%;
+  max-width: 34rem;
 }
 
 .subsection-title {
