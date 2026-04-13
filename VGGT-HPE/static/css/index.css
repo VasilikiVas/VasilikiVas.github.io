@@ -134,12 +134,14 @@ a:not(.button):visited {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
   gap: 1.5rem;
-  align-items: start;
+  align-items: stretch;
 }
 
 .method-steps {
   display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
   gap: 1rem;
+  height: 100%;
 }
 
 .method-side {
@@ -150,6 +152,7 @@ a:not(.button):visited {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 1rem;
+  height: 100%;
   padding: 1rem 1.1rem;
   border-radius: 20px;
   border: 1px solid var(--paper-line);
