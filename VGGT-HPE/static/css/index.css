@@ -191,10 +191,12 @@ a:not(.button):visited {
 
 .step-thumb {
   margin-top: 0.9rem;
-  width: 100%;
-  max-width: 100%;
+  width: 82%;
+  max-width: 82%;
   aspect-ratio: 4 / 3;
   display: block;
+  margin-left: auto;
+  margin-right: auto;
   object-fit: cover;
   object-position: center;
   border: 1px solid var(--paper-line);
