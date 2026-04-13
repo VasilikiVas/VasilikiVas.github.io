@@ -128,11 +128,17 @@ a:not(.button):visited {
 
 .method-hero {
   margin-top: 0;
+  margin-bottom: 1.85rem;
+  padding: 1.9rem;
+}
+
+.method-hero .paper-figure {
+  margin: 0;
 }
 
 .method-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
   gap: 1.5rem;
   align-items: stretch;
 }
@@ -344,6 +350,11 @@ a:not(.button):visited {
 @media screen and (max-width: 768px) {
   .paper-panel {
     padding: 1.1rem;
+  }
+
+  .method-hero {
+    margin-bottom: 1.3rem;
+    padding: 1.2rem;
   }
 
   .publication-title {
