@@ -9,10 +9,11 @@ last_name: Vasileiou
 email: v.vasileiou@athenarc.gr
 contact_note:
 description: >
+  Vasiliki Vasileiou is a PhD Candidate and researcher in computer vision and machine learning, focused on geometric vision, 3D understanding, and head pose estimation.
 footer_text: >
   Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
   Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
-keywords:
+keywords: Vasiliki Vasileiou, computer vision, machine learning, head pose estimation, 3D computer vision, VGGT-HPE
 lang: en
 icon: favicon.png
 
@@ -59,9 +60,9 @@ max_width: 930px
 # Open Graph & Schema.org
 # -----------------------------------------------------------------------------
 
-serve_og_meta: false
-serve_schema_org: false
-og_image:
+serve_og_meta: true
+serve_schema_org: true
+og_image: /assets/img/square-image.jpg
 
 # -----------------------------------------------------------------------------
 # Social integration
