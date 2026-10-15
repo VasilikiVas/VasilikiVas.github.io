@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- TODO when the camera-ready / proceedings PDF is available: add citation_pdf_url, link the Paper button, and fill the BibTeX pages. -->
+  <meta name="description" content="ReVA-HPE estimates full metric 6DoF head pose without a ground-truth anchor pose, using personalized virtual anchors rendered from a single unlabeled enrollment image and synthetic-only pose supervision.">
+  <meta name="keywords" content="ReVA-HPE, head pose estimation, relative pose prediction, 6DoF, virtual anchors, personalized avatar, computer vision">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#3f9142">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="author" content="Vasiliki Vasileiou, Panagiotis P. Filntisis, Petros Maragos, Kostas Daniilidis">
+  <link rel="canonical" href="https://vasilikivas.github.io/ReVA-HPE/">
+
+  <meta property="og:site_name" content="Vasiliki Vasileiou">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="ReVA-HPE: Relative 6DoF Head Pose Estimation with Synthetic Pose Supervision and Personalized Virtual Anchors">
+  <meta property="og:description" content="Full metric 6DoF head pose from a single unlabeled enrollment image: personalized virtual anchors for rotation, enrollment PnP for metric translation, synthetic-only training.">
+  <meta property="og:url" content="https://vasilikivas.github.io/ReVA-HPE/">
+  <meta property="og:image" content="https://vasilikivas.github.io/ReVA-HPE/static/images/figure1.png">
+  <meta property="og:image:alt" content="ReVA-HPE teaser figure">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ReVA-HPE: Relative 6DoF Head Pose Estimation with Synthetic Pose Supervision and Personalized Virtual Anchors">
+  <meta name="twitter:description" content="Full metric 6DoF head pose from a single unlabeled enrollment image, with synthetic-only pose supervision.">
+  <meta name="twitter:image" content="https://vasilikivas.github.io/ReVA-HPE/static/images/figure1.png">
+
+  <meta name="citation_title" content="ReVA-HPE: Relative 6DoF Head Pose Estimation with Synthetic Pose Supervision and Personalized Virtual Anchors">
+  <meta name="citation_author" content="Vasiliki Vasileiou">
+  <meta name="citation_author" content="Panagiotis P. Filntisis">
+  <meta name="citation_author" content="Petros Maragos">
+  <meta name="citation_author" content="Kostas Daniilidis">
+  <meta name="citation_publication_date" content="2027/01/01">
+  <meta name="citation_conference_title" content="IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)">
+  <meta name="citation_fulltext_html_url" content="https://vasilikivas.github.io/ReVA-HPE/">
+  <meta name="citation_public_url" content="https://vasilikivas.github.io/ReVA-HPE/">
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ScholarlyArticle",
+      "headline": "ReVA-HPE: Relative 6DoF Head Pose Estimation with Synthetic Pose Supervision and Personalized Virtual Anchors",
+      "name": "ReVA-HPE: Relative 6DoF Head Pose Estimation with Synthetic Pose Supervision and Personalized Virtual Anchors",
+      "description": "Full metric 6DoF head pose from a single unlabeled enrollment image: personalized virtual anchors for rotation, enrollment PnP for metric translation, synthetic-only training.",
+      "url": "https://vasilikivas.github.io/ReVA-HPE/",
+      "mainEntityOfPage": "https://vasilikivas.github.io/ReVA-HPE/",
+      "image": "https://vasilikivas.github.io/ReVA-HPE/static/images/figure1.png",
+      "datePublished": "2027-01-01",
+      "dateModified": "2026-10-15",
+      "isAccessibleForFree": true,
+      "author": [
+        {
+          "@type": "Person",
+          "name": "Vasiliki Vasileiou",
+          "url": "https://vasilikivas.github.io/"
+        },
+        {
+          "@type": "Person",
+          "name": "Panagiotis P. Filntisis",
+          "url": "https://filby89.github.io/"
+        },
+        {
+          "@type": "Person",
+          "name": "Petros Maragos",
+          "url": "https://robotics.ntua.gr/members/maragos/"
+        },
+        {
+          "@type": "Person",
+          "name": "Kostas Daniilidis",
+          "url": "https://www.cis.upenn.edu/~kostas/"
+        }
+      ],
+      "publisher": {
+        "@type": "Organization",
+        "name": "Vasiliki Vasileiou"
+      },
+      "keywords": [
+        "ReVA-HPE",
+        "head pose estimation",
+        "relative pose prediction",
+        "6DoF",
+        "virtual anchors",
+        "computer vision",
+        "BIWI",
+        "FaMoS"
+      ]
+    }
+  </script>
+  <title>ReVA-HPE: Relative 6DoF Head Pose Estimation with Synthetic Pose Supervision and Personalized Virtual Anchors</title>
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="shortcut icon" href="../assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="../assets/img/favicon.png">
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">
+            <span style="color: #3f9142;">ReVA</span><span style="color: #4f6d7a;">-HPE</span>:
+            Relative 6DoF Head Pose Estimation with Synthetic Pose Supervision and Personalized Virtual Anchors
+          </h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://vasilikivas.github.io/">Vasiliki Vasileiou</a><sup>1,2,4</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://filby89.github.io/">Panagiotis P. Filntisis</a><sup>2,3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://robotics.ntua.gr/members/maragos/">Petros Maragos</a><sup>2,3,4</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.cis.upenn.edu/~kostas/">Kostas Daniilidis</a><sup>1,5</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <sup>1</sup>Archimedes, Athena Research Center, Marousi, Greece
+              &nbsp;&nbsp;&nbsp;
+              <sup>2</sup>HERON, Hellenic Robotics Center of Excellence, Athens, Greece
+              &nbsp;&nbsp;&nbsp;
+              <sup>3</sup>Robotics Institute, Athena Research Center, Marousi, Greece
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <sup>4</sup>School of ECE, National Technical University of Athens, Greece
+              &nbsp;&nbsp;&nbsp;
+              <sup>5</sup>University of Pennsylvania
+            </span>
+          </div>
+
+          <div class="is-size-4 publication-authors" style="margin-top: .75rem;">
+            <span class="author-block" style="font-weight: 700; color: #3f9142;">WACV 2027</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- TODO at acceptance: replace with the real PDF link and remove is-disabled -->
+              <span class="link-block">
+                <a class="external-link button is-normal is-rounded is-dark is-disabled">
+                  <span class="icon">
+                    <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>Paper (coming soon)</span>
+                </a>
+              </span>
+              <!-- TODO when the code goes public: restore href="https://github.com/VasilikiVas/ReVA-HPE" and remove is-disabled -->
+              <span class="link-block">
+                <a class="external-link button is-normal is-rounded is-dark is-disabled">
+                  <span class="icon">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code (coming soon)</span>
+                </a>
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop has-text-centered">
+    <div class="hero-body">
+      <div class="content has-text-justified">
+        <img src="./static/images/figure1.png" alt="Figure 1 teaser for ReVA-HPE" class="paper-figure">
+        <p class="caption-note has-text-centered">
+          Absolute HPE regresses pose directly from the query and can generalize poorly across domains. VGGT-HPE predicts
+          relative pose but needs the anchor pose and estimates rotation only. ReVA-HPE removes both limitations: full 6DoF
+          head pose without the ground-truth pose of the enrollment image.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Monocular head pose estimation is usually formulated as absolute regression from a single face crop, yet many
+            applications observe the same person over time and can supply an explicit anchor image. Recently, relative head
+            pose estimation was proposed, which casts the problem as estimation of the relative geometric change between an
+            anchor and a query image. However, existing methods still require the anchor image pose to be known at inference,
+            significantly limiting their practical use. In this paper, we first extend relative head pose estimation to full
+            6DoF by additionally predicting a depth-normalized relative translation, which composes with the anchor to recover
+            metric query pose in the camera frame. To eliminate the need for a ground-truth anchor pose, we reconstruct a
+            personalized avatar from a single unlabeled enrollment image and render a bank of virtual anchors with known poses.
+            The bank provides robust rotation hypotheses through multi-anchor consensus, while the real enrollment image serves
+            as the real anchor in the translation branch via landmark PnP. We also introduce an efficient variant that amortizes
+            the bank cost once at enrollment, after which each query requires a single real-to-real relative prediction, with
+            limited accuracy sacrifice. The relative pose estimator is trained exclusively on synthetic face renderings, without
+            real pose supervision, pseudo-labels, domain adaptation, or fine-tuning on the evaluation sets. On real 6DoF
+            benchmarks, our proposed ReVA-HPE achieves state-of-the-art rotation accuracy on BIWI and, given a near-frontal
+            enrollment image, on FaMoS, while remaining competitive in metric translation despite relying solely on synthetic
+            pose supervision.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="paper-panel">
+      <h2 class="title is-3">Motivation</h2>
+      <ul class="motivation-list">
+        <li class="motivation-item">
+          <span class="motivation-fire">🔥</span>
+          <span>No ground-truth anchor pose at inference: a single unlabeled enrollment image is all that is needed.</span>
+        </li>
+        <li class="motivation-item">
+          <span class="motivation-fire">🔥</span>
+          <span>Full metric 6DoF: a depth-normalized relative translation composes with the anchor to recover metric pose in the camera frame.</span>
+        </li>
+        <li class="motivation-item">
+          <span class="motivation-fire">🔥</span>
+          <span>Personalized virtual anchors: a Gaussian avatar reconstructed from the enrollment image is rendered at known poses, turning one image into a whole anchor bank.</span>
+        </li>
+        <li class="motivation-item">
+          <span class="motivation-fire">🔥</span>
+          <span>VA-fast pays the bank cost once at enrollment; afterwards each query needs a single real-to-real prediction.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Methodology</h2>
+    <p class="section-intro">
+      From a single unlabeled enrollment image we build a personalized virtual-anchor bank; rotation comes from multi-anchor
+      consensus over the bank and metric translation from an enrollment PnP solve combined with the learned relative update.
+    </p>
+    <div class="paper-panel method-hero">
+      <img src="./static/images/figure2.png" alt="Figure 2 method overview for ReVA-HPE" class="paper-figure">
+    </div>
+    <div class="method-layout">
+      <div class="method-steps">
+        <article class="step-card">
+          <div class="step-number">1</div>
+          <div>
+            <h3>Personalized Virtual-Anchor Bank</h3>
+            <p>A personalized Gaussian avatar is reconstructed from the enrollment image and rendered at M known poses to form the bank.</p>
+          </div>
+        </article>
+        <article class="step-card">
+          <div class="step-number">2</div>
+          <div>
+            <h3>Avatar-Bank Pose Consensus</h3>
+            <p>The relative 6DoF model compares the query against all bank anchors; the M rotation candidates are fused by pose-space RANSAC into R&#770;<sub>q</sub><sup>bank</sup>.</p>
+          </div>
+        </article>
+        <article class="step-card">
+          <div class="step-number">3</div>
+          <div>
+            <h3>Enrollment-PnP Relative Translation</h3>
+            <p>68 landmarks on the enrollment image ground a metric PnP solve; the model predicts the depth-normalized translation update (&delta;x, &delta;y, &delta;z), yielding t&#770;<sub>q</sub><sup>PnP-rel</sup>.</p>
+          </div>
+        </article>
+        <article class="step-card">
+          <div class="step-number">4</div>
+          <div>
+            <h3>Fuse and Output 6DoF Pose</h3>
+            <p>Each component comes from its most reliable source: P&#770;<sub>q</sub> = (R&#770;<sub>q</sub><sup>bank</sup>, t&#770;<sub>q</sub><sup>PnP-rel</sup>).</p>
+          </div>
+        </article>
+      </div>
+      <div class="method-side">
+        <article class="step-card step-card-featured">
+          <div class="step-number">5</div>
+          <div>
+            <h3>Synthetic Training Setup</h3>
+            <p>The relative estimator is the frozen VGGT camera branch adapted with LoRA, trained exclusively on procedural FLAME renderings to predict relative rotation together with the depth-normalized translation update — no real pose supervision, pseudo-labels, or fine-tuning on the evaluation sets.</p>
+            <img src="./static/images/figure3.jpg" alt="Samples from the synthetic training set" class="step-thumb">
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="paper-panel">
+      <h3 class="subsection-title">Personalized Metric Virtual-Anchor Banks</h3>
+      <img src="./static/images/figure4.jpg" alt="Examples of personalized metric virtual-anchor banks" class="paper-figure">
+      <p class="panel-copy">
+        Nominal-radius, 20-direction slices of the virtual-anchor banks for a BIWI and a FaMoS subject. Each anchor is a
+        rendering of the personalized avatar with a known metric pose; the full bank spans five radius scales.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="results">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Results</h2>
+    <p class="section-intro">
+      ReVA-HPE achieves state-of-the-art rotation accuracy on BIWI and, given a near-frontal enrollment image, on FaMoS,
+      while remaining competitive in metric translation — all with purely synthetic pose supervision and no ground-truth
+      anchor pose.
+    </p>
+
+    <div class="paper-panel">
+      <h3 class="subsection-title">Qualitative Results on BIWI</h3>
+      <img src="./static/images/figure5.jpg" alt="Qualitative BIWI results for ReVA-HPE" class="paper-figure">
+      <p class="panel-copy">
+        Each row shows one query example: the query frame, the enrollment image used by ReVA-HPE, the ground-truth overlay,
+        reproduced baselines, the PnP-enrollment relative variant, ReVA-HPE, and GT-anchor oracle variants. All overlays render
+        the fitted head mesh in the predicted camera-frame 6DoF pose. ReVA-HPE produces accurate overlays across subjects and
+        head orientations without using a ground-truth anchor pose.
+      </p>
+    </div>
+
+    <div class="paper-panel">
+      <h3 class="subsection-title">Qualitative Results on FaMoS</h3>
+      <img src="./static/images/figure6.jpg" alt="Qualitative FaMoS results for ReVA-HPE" class="paper-figure">
+      <p class="panel-copy">
+        FaMoS contains strong viewpoint and camera-geometry shifts, making single enrollment-PnP rotation unreliable in several
+        cases. These examples illustrate cases in which avatar-bank rotation improves over the single enrollment-PnP rotation.
+      </p>
+    </div>
+
+    <div class="paper-panel">
+      <h3 class="subsection-title">Main BIWI Results (6DoF)</h3>
+      <p class="panel-copy">
+        Rotation in degrees, translation in millimeters, lower is better. Reproduced results use the shared MTCNN protocol.
+        &ldquo;First frame&rdquo; fixes each subject's first available frame as enrollment, without pose-based selection.
+      </p>
+      <div class="table-scroll">
+        <table class="paper-metrics paper-metrics-wide">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Yaw ↓</th>
+              <th>Pitch ↓</th>
+              <th>Roll ↓</th>
+              <th>MAE<sub>r</sub> ↓</th>
+              <th>Tx ↓</th>
+              <th>Ty ↓</th>
+              <th>Tz ↓</th>
+              <th>MAE<sub>t</sub> ↓</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="table-section-row"><td colspan="10">Reported numbers</td></tr>
+            <tr><td>Direct 6DoF Regress</td><td>16.49</td><td>14.03</td><td>5.81</td><td>12.11</td><td>62.36</td><td>85.01</td><td>366.52</td><td>171.30</td><td><span class="data-chip data-r">R</span></td></tr>
+            <tr><td>Refined Pix2Pose</td><td>5.75</td><td>5.06</td><td>11.23</td><td>7.35</td><td>16.82</td><td>21.30</td><td>255.36</td><td>97.83</td><td><span class="data-chip data-r">R</span></td></tr>
+            <tr><td>MICA</td><td>5.40</td><td>7.17</td><td>3.80</td><td>5.46</td><td>9.32</td><td>13.66</td><td>60.13</td><td>27.70</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>JMLR</td><td>6.31</td><td>6.17</td><td>3.72</td><td>5.40</td><td>8.66</td><td>7.27</td><td>32.63</td><td>16.19</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>PerspNet</td><td>3.10</td><td>3.37</td><td>2.38</td><td>2.95</td><td>4.15</td><td>6.43</td><td>46.69</td><td>19.09</td><td><span class="data-chip data-r">R</span></td></tr>
+            <tr><td>TRG</td><td>3.28</td><td>3.52</td><td>1.87</td><td>2.89</td><td>8.41</td><td>7.38</td><td>27.13</td><td>14.31</td><td><span class="data-chip data-r">R</span></td></tr>
+            <tr><td>TRG*</td><td>3.04</td><td>3.44</td><td>1.78</td><td>2.75</td><td>7.83</td><td>6.99</td><td>24.07</td><td>12.97</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>OPAL</td><td>4.54</td><td>5.05</td><td>2.80</td><td>4.13</td><td>–</td><td>–</td><td>–</td><td>–</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr class="table-section-row"><td colspan="10">Reproduced under shared MTCNN protocol</td></tr>
+            <tr><td>6DRepNet</td><td>3.74</td><td>4.95</td><td>3.04</td><td>3.91</td><td>–</td><td>–</td><td>–</td><td>–</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>TokenHPE-v1</td><td>5.57</td><td>6.23</td><td>3.79</td><td>5.20</td><td>–</td><td>–</td><td>–</td><td>–</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>TRG*</td><td>4.58</td><td>7.18</td><td>3.68</td><td>5.15</td><td>13.03</td><td>13.59</td><td>119.52</td><td>48.71</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>SemiUHPE</td><td>3.30</td><td>3.71</td><td>2.60</td><td>3.20</td><td>–</td><td>–</td><td>–</td><td>–</td><td><span class="data-chip data-r">R</span></td></tr>
+            <tr><td>OPAL</td><td>3.74</td><td>7.23</td><td>3.25</td><td>4.74</td><td>–</td><td>–</td><td>–</td><td>–</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>VGGT-HPE-Abs</td><td>4.90</td><td>7.01</td><td>3.53</td><td>5.15</td><td>–</td><td>–</td><td>–</td><td>–</td><td><span class="data-chip data-s">S</span></td></tr>
+            <tr><td>PnP-enrollment + Rel.</td><td>2.27</td><td>4.19</td><td>3.41</td><td>3.29</td><td>8.43</td><td>11.14</td><td>31.74</td><td>17.10</td><td><span class="data-chip data-s">S</span></td></tr>
+            <tr class="ours-row"><td>ReVA-HPE (ours, first frame)</td><td>2.20</td><td>2.94</td><td>2.47</td><td>2.53</td><td>8.43</td><td>11.14</td><td>31.74</td><td>17.10</td><td><span class="data-chip data-s">S</span></td></tr>
+            <tr class="ours-row"><td>ReVA-HPE (ours, α ≤ 15°)</td><td>2.01</td><td>2.84</td><td>2.61</td><td>2.49</td><td>8.77</td><td>11.73</td><td>36.34</td><td>18.94</td><td><span class="data-chip data-s">S</span></td></tr>
+            <tr class="table-section-row"><td colspan="10">Methods using a GT anchor pose†</td></tr>
+            <tr><td>VGGT-HPE†</td><td>2.23</td><td>3.07</td><td>3.38</td><td>2.89</td><td>47.32</td><td>20.93</td><td>62.21</td><td>43.48</td><td><span class="data-chip data-s">S</span></td></tr>
+            <tr><td>ReVA-HPE-GT† (ours)</td><td>1.60</td><td>1.92</td><td>2.72</td><td>2.08</td><td>7.53</td><td>6.31</td><td>14.86</td><td>9.57</td><td><span class="data-chip data-s">S</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">R = real, M = mixed, S = synthetic pose supervision. † requires the ground-truth pose of the enrollment image at test time.</p>
+    </div>
+
+    <div class="paper-panel">
+      <h3 class="subsection-title">FaMoS Results (6DoF, shared MTCNN protocol)</h3>
+      <p class="panel-copy">
+        FaMoS probes transfer beyond BIWI, with strong viewpoint and camera-geometry shifts. With a near-frontal enrollment
+        (α ≤ 15°), ReVA-HPE surpasses all compared methods in rotation.
+      </p>
+      <div class="table-scroll">
+        <table class="paper-metrics paper-metrics-wide">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Yaw ↓</th>
+              <th>Pitch ↓</th>
+              <th>Roll ↓</th>
+              <th>MAE<sub>r</sub> ↓</th>
+              <th>Tx ↓</th>
+              <th>Ty ↓</th>
+              <th>Tz ↓</th>
+              <th>MAE<sub>t</sub> ↓</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>6DRepNet</td><td>4.54</td><td>8.03</td><td>5.36</td><td>5.98</td><td>–</td><td>–</td><td>–</td><td>–</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>TokenHPE-v1</td><td>8.62</td><td>5.69</td><td>4.46</td><td>6.26</td><td>–</td><td>–</td><td>–</td><td>–</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>TRG*</td><td>6.18</td><td>6.26</td><td>4.32</td><td>5.59</td><td>7.52</td><td>5.06</td><td>91.40</td><td>34.66</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>SemiUHPE</td><td>1.98</td><td>3.65</td><td>2.94</td><td>2.86</td><td>–</td><td>–</td><td>–</td><td>–</td><td><span class="data-chip data-r">R</span></td></tr>
+            <tr><td>OPAL</td><td>8.33</td><td>5.38</td><td>5.14</td><td>6.28</td><td>–</td><td>–</td><td>–</td><td>–</td><td><span class="data-chip data-m">M</span></td></tr>
+            <tr><td>VGGT-HPE-Abs</td><td>34.41</td><td>10.60</td><td>9.73</td><td>18.29</td><td>27.14</td><td>9.15</td><td>85.10</td><td>40.46</td><td><span class="data-chip data-s">S</span></td></tr>
+            <tr><td>PnP-enrollment + Rel.</td><td>8.93</td><td>37.41</td><td>15.80</td><td>20.72</td><td>20.58</td><td>11.86</td><td>61.39</td><td>31.27</td><td><span class="data-chip data-s">S</span></td></tr>
+            <tr class="ours-row"><td>ReVA-HPE (ours, first frame)</td><td>1.34</td><td>6.69</td><td>3.31</td><td>3.78</td><td>20.58</td><td>11.86</td><td>61.39</td><td>31.27</td><td><span class="data-chip data-s">S</span></td></tr>
+            <tr class="ours-row"><td>ReVA-HPE (ours, α ≤ 15°)</td><td>1.21</td><td>3.39</td><td>2.80</td><td>2.47</td><td>10.68</td><td>7.02</td><td>53.42</td><td>23.71</td><td><span class="data-chip data-s">S</span></td></tr>
+            <tr class="table-section-row"><td colspan="10">Methods using a GT anchor pose†</td></tr>
+            <tr><td>VGGT-HPE-Rel†</td><td>2.93</td><td>4.91</td><td>5.47</td><td>4.44</td><td>24.85</td><td>15.00</td><td>33.68</td><td>24.51</td><td><span class="data-chip data-s">S</span></td></tr>
+            <tr><td>ReVA-HPE-GT† (ours)</td><td>1.38</td><td>1.77</td><td>2.70</td><td>1.95</td><td>12.43</td><td>3.68</td><td>13.49</td><td>9.87</td><td><span class="data-chip data-s">S</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">R = real, M = mixed, S = synthetic pose supervision. † requires the ground-truth pose of the enrollment image at test time.</p>
+    </div>
+
+    <div class="paper-panel">
+      <h3 class="subsection-title">Bank Size and Efficient Inference</h3>
+      <p class="panel-copy">
+        Direct-1r evaluates M anchors at one radius, Direct-5r evaluates 5M candidates at five radii, and VA-fast uses the bank
+        once at enrollment followed by one real-to-real prediction per query. Accuracy largely saturates at M = 20. MAE<sub>r</sub>
+        in degrees; time is model-only seconds per query.
+      </p>
+      <div class="table-scroll">
+        <table class="paper-metrics">
+          <thead>
+            <tr>
+              <th>Protocol</th>
+              <th>M=5<br>MAE<sub>r</sub> / Time</th>
+              <th>M=10<br>MAE<sub>r</sub> / Time</th>
+              <th>M=20<br>MAE<sub>r</sub> / Time</th>
+              <th>M=50<br>MAE<sub>r</sub> / Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Direct-1r</td><td>4.30 / 0.683</td><td>2.92 / 1.165</td><td>2.69 / 2.185</td><td>2.58 / 5.259</td></tr>
+            <tr><td>Direct-5r</td><td>3.23 / 2.472</td><td>2.79 / 4.902</td><td>2.53 / 9.774</td><td>2.51 / 30.877</td></tr>
+            <tr class="ours-row"><td>VA-fast</td><td>4.53 / 0.137</td><td>3.08 / 0.117</td><td>2.85 / 0.109</td><td>2.97 / 0.105</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">
+        VA-fast speedups over Direct-1r / Direct-5r: 5.0× / 18.0× (M=5), 10.0× / 41.9× (M=10), 20.0× / 89.7× (M=20),
+        50.1× / 294.1× (M=50). Avatar reconstruction and bank rendering are one-time enrollment costs.
+      </p>
+    </div>
+
+    <div class="paper-panel">
+      <h3 class="subsection-title">Robustness Highlights</h3>
+      <ul class="motivation-list">
+        <li class="motivation-item">
+          <span class="motivation-fire">📈</span>
+          <span>Enrollment pose: rotation degrades gracefully as the enrollment becomes more off-axis — gradually on BIWI, more strongly on FaMoS; near-frontal enrollment is best.</span>
+        </li>
+        <li class="motivation-item">
+          <span class="motivation-fire">🛡️</span>
+          <span>Enrollment degradation and landmark noise affect mainly the translation branch; bank-based rotation stays stable under image perturbations of the enrollment.</span>
+        </li>
+        <li class="motivation-item">
+          <span class="motivation-fire">🔁</span>
+          <span>Consistent behavior across face detectors (MTCNN and RetinaFace protocols) and across consensus-threshold calibration choices.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="citation">
+  <div class="container is-max-desktop content">
+    <h2 class="title">Citation</h2>
+    <!-- TODO: add pages when the WACV 2027 proceedings are published -->
+    <pre><code>@inproceedings{vasileiou2027revahpe,
+  title={ReVA-HPE: Relative 6DoF Head Pose Estimation with Synthetic Pose Supervision and Personalized Virtual Anchors},
+  author={Vasileiou, Vasiliki and Filntisis, Panagiotis P. and Maragos, Petros and Daniilidis, Kostas},
+  booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  year={2027}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            The source code of this website is borrowed from
+            <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
