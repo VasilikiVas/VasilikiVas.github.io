@@ -15,6 +15,7 @@
 {% endif %}
 
 {% capture author_name %}{{ site.first_name }}{% if site.middle_name %} {{ site.middle_name }}{% endif %} {{ site.last_name }}{% endcapture %}
+{% assign author_name = author_name | strip %}
 
 <!-- Standard metadata -->
 <meta charset="utf-8">
@@ -38,8 +39,27 @@
     {{ title }}
   {% endif %}
 </title>
+{% assign title = title | strip %}
+{% capture meta_description %}
+  {% if page.description %}
+    {{ page.description }}
+  {% else %}
+    {{ site.description }}
+  {% endif %}
+{% endcapture %}
+{% assign meta_description = meta_description | strip %}
+{% assign canonical_url = page.url | replace: 'index.html', '' | absolute_url %}
+{% assign social_image = page.og_image | default: site.og_image | absolute_url %}
+{% if page.url == '/' %}
+  {% assign social_title = title %}
+{% elsif page.title %}
+  {% capture social_title %}{{ page.title }} | {{ title }}{% endcapture %}
+{% else %}
+  {% assign social_title = title %}
+{% endif %}
+{% assign social_title = social_title | strip %}
 <meta name="author" content="{{ author_name }}">
-<meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+<meta name="description" content="{{ meta_description | escape }}">
 {% if page.keywords or site.keywords %}
   <meta name="keywords" content="{% if page.keywords %}{{ page.keywords }}{% else %}{{ site.keywords }}{% endif %}">
 {% endif %}
@@ -55,20 +75,20 @@
   <!-- OpenGraph -->
   <meta property="og:site_name" content="{{ title }}">
   <meta property="og:type" content="{% if is_blog_post %}article{% else %}website{% endif %}">
-  <meta property="og:title" content="{% if page.title %}{{ title }} | {{ page.title }}{% else %}{{ title }}{% endif %}">
-  <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
-  <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
-  {% if page.og_image or site.og_image %}
-    <meta property="og:image" content="{% if page.og_image %}{{ page.og_image }}{% else %}{{ site.og_image }}{% endif %}">
+  <meta property="og:title" content="{{ social_title | escape }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:description" content="{{ meta_description | escape }}">
+  {% if social_image %}
+    <meta property="og:image" content="{{ social_image }}">
   {% endif %}
   <meta property="og:locale" content="{{ site.lang }}">
 
   <!-- Twitter card -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
-  <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
-  {% if page.og_image or site.og_image %}
-    <meta name="twitter:image" content="{% if page.og_image %}{{ page.og_image }}{% else %}{{ site.og_image }}{% endif %}">
+  <meta name="twitter:title" content="{{ social_title | escape }}">
+  <meta name="twitter:description" content="{{ meta_description | escape }}">
+  {% if social_image %}
+    <meta name="twitter:image" content="{{ social_image }}">
   {% endif %}
   {% if site.x_username %}
     <meta name="twitter:site" content="@{{ site.x_username }}">
@@ -226,22 +246,41 @@
     {% endcase %}
   {% endfor %}
 
+  {% if page.url == '/' %}
+    {% assign schema_type = 'WebSite' %}
+    {% assign schema_name = title %}
+  {% elsif is_blog_post %}
+    {% assign schema_type = 'BlogPosting' %}
+    {% assign schema_name = page.title | default: title %}
+  {% else %}
+    {% assign schema_type = 'WebPage' %}
+    {% assign schema_name = page.title | default: title %}
+  {% endif %}
+  {% assign homepage_url = '/' | absolute_url %}
+
   <script type="application/ld+json">
     {
-        "author":
-        {
-            "@type": "Person",
-            "name": "{{ author_name }}"
-        },
-        "url": "{{ page.url | prepend: site.baseurl | prepend: site.url }}",
-        "@type": "{% if is_blog_post %}BlogPosting{% else %}WebSite{% endif %}",
-        "description": "{% if page.description %}{{ page.description }}{% else if site.description %}{{ site.description }}{% endif %}",
-        "headline": "{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}",
-        {% if sameaslinks != blank %}
-        "sameAs": {{ sameaslinks | jsonify }},
+        "@context": "https://schema.org",
+        "@type": {{ schema_type | jsonify }},
+        "url": {{ canonical_url | jsonify }},
+        "name": {{ schema_name | jsonify }},
+        "headline": {{ schema_name | jsonify }},
+        "description": {{ meta_description | jsonify }},
+        "inLanguage": {{ site.lang | jsonify }},
+        {% if page.url == '/' and site.github_username %}
+        "alternateName": {{ site.github_username | jsonify }},
         {% endif %}
-        "name": "{{ author_name }}",
-        "@context": "https://schema.org"
+        "author": {
+            "@type": "Person",
+            "name": {{ author_name | jsonify }},
+            {% if site.og_image %}
+            "image": {{ site.og_image | absolute_url | jsonify }},
+            {% endif %}
+            {% if sameaslinks != blank %}
+            "sameAs": {{ sameaslinks | jsonify }},
+            {% endif %}
+            "url": {{ homepage_url | jsonify }}
+        }
     }
   </script>
 {% endif %}
