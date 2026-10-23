@@ -7,8 +7,8 @@ cv:
   location: Athens, Greece
   image: ""
   summary: >-
-    PhD Candidate at the National Technical University of Athens and PhD Fellow
-    at the Archimedes Research Unit of Athena Research Center. My research
+    PhD Candidate at the National Technical University of Athens, affiliated
+    with HERON, the Hellenic Robotics Center of Excellence. My research
     focuses on computer vision and machine learning, with particular interest in
     geometric computer vision, 3D understanding, neural rendering, and
     language-guided visual learning, robotics, and 3D scene understanding.
@@ -27,7 +27,7 @@ cv:
 
   sections:
     Experience:
-      - company: Archimedes Research Unit, Athena Research Center
+      - company: HERON, Hellenic Robotics Center of Excellence
         position: PhD Fellow
         location: Athens, Greece
         start_date: 2023-09-01
@@ -87,7 +87,7 @@ cv:
           - "Current GPA: 9.6/10."
           - "Research focus: 3D computer vision, neural radiance fields, projective geometry, and language models."
           - "Advisors: Prof. [Kostas Daniilidis](https://www.cis.upenn.edu/~kostas/) and Prof. [Petros Maragos](https://robotics.ntua.gr/members/maragos/)."
-          - "Affiliation: PhD Fellow at the Archimedes Research Unit, Athena Research Center."
+          - "Affiliation: PhD Fellow at HERON, Hellenic Robotics Center of Excellence."
           - "Selected coursework: Theoretical Methods of Computer Vision & Signal Processing; Virtual Reality, Haptics and Applications in Telerobotics; Artificial Intelligence and Data Analysis; [Machine Perception](https://sites.google.com/seas.upenn.edu/cis580spr22/home) (UPenn)."
 
       - institution: University of Amsterdam
