@@ -116,6 +116,15 @@ cv:
           - "Selected coursework: Computer Vision; Intelligent Systems; Pattern Recognition; Robotics; Speech and Language Processing; Human-Computer Interaction."
 
     Publications:
+      - title: "ReVA-HPE: Relative 6DoF Head Pose Estimation with Synthetic Pose Supervision and Personalized Virtual Anchors"
+        authors:
+          - Vasiliki Vasileiou
+          - Panagiotis P. Filntisis
+          - Petros Maragos
+          - Kostas Daniilidis
+        publisher: WACV
+        releaseDate: 2027-01-01
+
       - title: "VGGT-HPE: Reframing Head Pose Estimation as Relative Pose Prediction"
         authors:
           - Vasiliki Vasileiou
