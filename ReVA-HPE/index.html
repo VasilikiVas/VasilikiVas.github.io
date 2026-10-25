@@ -325,25 +325,6 @@
       anchor pose.
     </p>
 
-    <div class="paper-panel">
-      <h3 class="subsection-title">Qualitative Results on BIWI</h3>
-      <img src="./static/images/figure5.jpg" alt="Qualitative BIWI results for ReVA-HPE" class="paper-figure">
-      <p class="panel-copy">
-        Each row shows one query example: the query frame, the enrollment image used by ReVA-HPE, the ground-truth overlay,
-        reproduced baselines, the PnP-enrollment relative variant, ReVA-HPE, and GT-anchor oracle variants. All overlays render
-        the fitted head mesh in the predicted camera-frame 6DoF pose. ReVA-HPE produces accurate overlays across subjects and
-        head orientations without using a ground-truth anchor pose.
-      </p>
-    </div>
-
-    <div class="paper-panel">
-      <h3 class="subsection-title">Qualitative Results on FaMoS</h3>
-      <img src="./static/images/figure6.jpg" alt="Qualitative FaMoS results for ReVA-HPE" class="paper-figure">
-      <p class="panel-copy">
-        FaMoS contains strong viewpoint and camera-geometry shifts, making single enrollment-PnP rotation unreliable in several
-        cases. These examples illustrate cases in which avatar-bank rotation improves over the single enrollment-PnP rotation.
-      </p>
-    </div>
 
     <div class="paper-panel">
       <h3 class="subsection-title">Main BIWI Results (6DoF)</h3>
@@ -484,6 +465,26 @@
           <span>Consistent behavior across face detectors (MTCNN and RetinaFace protocols) and across consensus-threshold calibration choices.</span>
         </li>
       </ul>
+    </div>
+
+    <div class="paper-panel">
+      <h3 class="subsection-title">Qualitative Results on BIWI</h3>
+      <img src="./static/images/figure5.jpg" alt="Qualitative BIWI results for ReVA-HPE" class="paper-figure">
+      <p class="panel-copy">
+        Each row shows one query example: the query frame, the enrollment image used by ReVA-HPE, the ground-truth overlay,
+        reproduced baselines, the PnP-enrollment relative variant, ReVA-HPE, and GT-anchor oracle variants. All overlays render
+        the fitted head mesh in the predicted camera-frame 6DoF pose. ReVA-HPE produces accurate overlays across subjects and
+        head orientations without using a ground-truth anchor pose.
+      </p>
+    </div>
+
+    <div class="paper-panel">
+      <h3 class="subsection-title">Qualitative Results on FaMoS</h3>
+      <img src="./static/images/figure6.jpg" alt="Qualitative FaMoS results for ReVA-HPE" class="paper-figure">
+      <p class="panel-copy">
+        FaMoS contains strong viewpoint and camera-geometry shifts, making single enrollment-PnP rotation unreliable in several
+        cases. These examples illustrate cases in which avatar-bank rotation improves over the single enrollment-PnP rotation.
+      </p>
     </div>
   </div>
 </section>
