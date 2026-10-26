@@ -27,10 +27,10 @@ cv:
 
   sections:
     Experience:
-      - company: HERON, Hellenic Robotics Center of Excellence
-        position: PhD Fellow
+      - company: HERON, Hellenic Robotics Center of Excellence - Athena RC
+        position: PhD Candidate
         location: Athens, Greece
-        start_date: 2023-09-01
+        start_date: 2026-07-01
         summary: >-
           Research in computer vision and machine learning, with a focus on
           neural radiance fields, projective geometry, 3D geometry in computer
@@ -38,6 +38,16 @@ cv:
           [Kostas Daniilidis](https://www.cis.upenn.edu/~kostas/) and Prof.
           [Petros Maragos](https://robotics.ntua.gr/members/maragos/) in
           collaboration with the National Technical University of Athens.
+
+      - company: Archimedes Research Unit - Athena RC
+        position: PhD Candidate
+        location: Athens, Greece
+        start_date: 2023-09-01
+        end_date: 2026-07-01
+        summary: >-
+          Research in computer vision and machine learning, with a focus on
+          neural radiance fields, projective geometry, 3D geometry in computer
+          vision, and language models.
 
       - company: GRASP Lab, University of Pennsylvania
         position: Visiting Associate
@@ -87,7 +97,7 @@ cv:
           - "Current GPA: 9.6/10."
           - "Research focus: 3D computer vision, neural radiance fields, projective geometry, and language models."
           - "Advisors: Prof. [Kostas Daniilidis](https://www.cis.upenn.edu/~kostas/) and Prof. [Petros Maragos](https://robotics.ntua.gr/members/maragos/)."
-          - "Affiliation: PhD Fellow at HERON, Hellenic Robotics Center of Excellence."
+          - "Affiliation: PhD Fellow at the Archimedes Research Unit and HERON Robotics CoE, Athena RC."
           - "Selected coursework: Theoretical Methods of Computer Vision & Signal Processing; Virtual Reality, Haptics and Applications in Telerobotics; Artificial Intelligence and Data Analysis; [Machine Perception](https://sites.google.com/seas.upenn.edu/cis580spr22/home) (UPenn)."
 
       - institution: University of Amsterdam
@@ -131,7 +141,7 @@ cv:
           - Panagiotis P. Filntisis
           - Petros Maragos
           - Kostas Daniilidis
-        publisher: CVPR Workshop
+        publisher: CVPR Workshop (oral)
         releaseDate: 2026-01-01
 
       - title: "Reproducibility Study for Explaining in Style: Training a GAN to Explain a Classifier in StyleSpace"
